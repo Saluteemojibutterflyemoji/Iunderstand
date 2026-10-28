@@ -28,7 +28,9 @@ const q=box.value.trim();
 if(!q)return;
 say("Allen-i_10CAV",q);
 const low=q.toLowerCase();
-if(BEFORE.some(w=>low.includes(w))){say("AI","That's before my timeline. I don't know.");}
+const tight=low.replace(/\s/g,"");
+if(/^w(\.\.\.|…)word\?$/.test(tight)){say("AI","I don't know.");}
+else if(BEFORE.some(w=>low.includes(w))){say("AI","That's before my timeline. I don't know.");}
 else{say("AI","My timeline begins with Moses. Let's go forward from there.");}
 box.value="";
 }
