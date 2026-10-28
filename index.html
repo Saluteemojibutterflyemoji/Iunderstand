@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Allen-i 10CAV</title>
+<style>
+body{font-family:sans-serif;background:#111;color:#eee;padding:16px;font-size:20px}
+#log p{margin:8px 0}
+input,button{font-size:20px;padding:10px}
+input{width:70%}
+</style>
+</head>
+<body>
+<h1>Allen-i 10CAV</h1>
+<div id="log" aria-live="polite"></div>
+<input id="q" placeholder="Ask a question" aria-label="Your question">
+<button id="ask">Ask</button>
+<script>
+const START="Moses, thought to be the stepbrother of Ramses II. This is where my AI begins.";
+const BEFORE=["pyramid","flood","noah","ark","adam","eve","eden","creation"];
+const log=document.getElementById("log");
+function say(who,text){const p=document.createElement("p");p.textContent=who+": "+text;log.appendChild(p);}
+say("AI",START);
+function ask(){
+const box=document.getElementById("q");
+const q=box.value.trim();
+if(!q)return;
+say("Allen-i_10CAV",q);
+const low=q.toLowerCase();
+if(BEFORE.some(w=>low.includes(w))){say("AI","That's before my timeline. I don't know.");}
+else{say("AI","My timeline begins with Moses. Let's go forward from there.");}
+box.value="";
+}
+document.getElementById("ask").onclick=ask;
+document.getElementById("q").addEventListener("keydown",e=>{if(e.key==="Enter")ask();});
+</script>
+</body>
+</html>
