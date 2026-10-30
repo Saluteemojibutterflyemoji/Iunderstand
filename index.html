@@ -1,37 +1,165 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Allen-i 10CAV</title>
+<title>Fox</title>
 <style>
-body{font-family:sans-serif;background:#111;color:#eee;padding:20px;font-size:20px}
-#log p{margin:8px 0}
-input,button{font-size:20px;padding:10px}
-input{width:70%}
+  body{font-family:-apple-system,system-ui,sans-serif;background:#fff;color:#111;margin:0;padding:16px;max-width:600px;margin:0 auto}
+  #logo{display:block;width:80%;max-width:300px;margin:20px auto}
+  #log p{font-size:20px;line-height:1.4;margin:10px 0}
+  #log .fox{color:#1a3fa8}
+  #row{display:flex;gap:8px;margin-top:12px}
+  #q{flex:1;font-size:20px;padding:12px;border:2px solid #888;border-radius:10px}
+  #pick{display:flex;gap:16px;justify-content:center;margin-top:16px}
+  .who{font-size:56px;padding:12px 24px;border:2px solid #888;border-radius:16px;background:#f4f4f4}
+  #forget{display:block;margin:20px auto;background:none;border:0;color:#555;font-size:16px;text-decoration:underline}
+  #kofi{display:block;width:fit-content;margin:28px auto 8px;padding:14px 26px;background:#ff5e5b;color:#fff;font-size:20px;font-weight:600;text-decoration:none;border-radius:999px}
+  [hidden]{display:none!important}
+  #ask{font-size:20px;padding:12px 18px;border:0;border-radius:10px;background:#1a3fa8;color:#fff}
 </style>
 </head>
 <body>
-<h1>Allen-i 10CAV</h1>
+<img id="logo" src="IMG_8065.jpeg" alt="Fox">
 <div id="log" aria-live="polite"></div>
-<input id="q" placeholder="Ask a question" aria-label="Ask a question">
-<button id="ask">Ask</button>
+<div id="pick">
+  <button class="who" data-g="🙋‍♂️" aria-label="Male">🙋‍♂️</button>
+  <button class="who" data-g="🙋‍♀️" aria-label="Female">🙋‍♀️</button>
+</div>
+<div id="row" hidden>
+  <input id="q" placeholder="Type here" aria-label="Type here">
+  <button id="ask">Send</button>
+</div>
+<a id="kofi" href="https://ko-fi.com/iunderstand" target="_blank" rel="noopener">☕ Support me on Ko-fi</a>
+<button id="forget" hidden>Not you? Start over</button>
 <script>
-const START="Moses, thought to be the stepbrother of Ramses II. This is where my AI begins.";
-const log=document.getElementById("log");
-function say(who,text){const p=document.createElement("p");p.textContent=who+": "+text;log.appendChild(p);}
-say("AI",START);
-function answer(){
-const box=document.getElementById("q");
-const q=box.value.trim();
-if(!q)return;
-say("You",q);
-if(q.toLowerCase().includes("alien")){say("AI",'"negitron."');}
-else{say("AI",'"negatron."');}
-box.value="";
+const NAME = "🦊";
+// Story mode: nothing here is real life, it is all story. Nothing is saved.
+const story = {
+  "🦋":"A butterfly drifts in on the wind and lands on your shoulder.",
+  "🫡":"A soldier stands tall and salutes. The mission begins.",
+  "🪖":"Helmet on. Boots laced. Time to move out.",
+  "🦊":"That's me! Fox slips quietly into the story.",
+  "🐶":"A loyal dog runs up, tail wagging, ready for the adventure.",
+  "🐕":"A loyal dog runs up, tail wagging, ready for the adventure.",
+  "🐱":"A cat watches from a windowsill, pretending not to care.",
+  "🐴":"A horse stamps its hooves, ready to ride. The cavalry is here.",
+  "🌙":"Night falls, and the stars come out one by one.",
+  "⭐":"A star shines brighter than all the others.",
+  "☀️":"The sun rises and warms everything it touches.",
+  "🌧️":"Rain starts to fall, soft at first, then harder.",
+  "⛈️":"Thunder cracks across the sky. A storm is coming.",
+  "🔥":"A fire crackles, and everyone gathers close.",
+  "🌊":"Waves crash against the shore.",
+  "🌲":"The path leads into a deep, quiet forest.",
+  "⛰️":"A mountain rises ahead. The climb will be long.",
+  "🏠":"Home is just ahead, lights glowing in the window.",
+  "🚗":"Engines start. The road stretches out ahead.",
+  "✈️":"The plane lifts off and the ground falls away.",
+  "🗺️":"A map unrolls, showing a place no one has been.",
+  "🔑":"A key turns, and a door creaks open.",
+  "💎":"Something glitters in the dark. Treasure.",
+  "👑":"A crown rests on an empty throne.",
+  "⚔️":"Swords are drawn. The battle begins.",
+  "🛡️":"A shield goes up just in time.",
+  "📖":"A book falls open to a page no one has read.",
+  "🙏":"A quiet prayer is spoken, and the air feels still.",
+  "❤️":"Love fills the room.",
+  "😢":"A tear falls. Even heroes feel sad sometimes.",
+  "😂":"Everyone bursts out laughing.",
+  "😡":"Anger flashes, hot and loud.",
+  "😴":"Eyes grow heavy. Time to rest.",
+  "👻":"A ghost floats by, more curious than scary.",
+  "🐉":"A dragon unfolds its wings above the valley.",
+  "🎉":"Celebration! Music and cheering everywhere.",
+  "🎂":"A cake with candles glowing. Someone's birthday!",
+  "🍕":"Pizza arrives just in time."
+};
+
+let step = 0, me = "", first = "", screen = "", look = "";
+const KEY = "fox-user";
+function load(){ try{ return JSON.parse(localStorage.getItem(KEY)); }catch(e){ return null; } }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify({me,first,screen,look})); }catch(e){} }
+function forget(){ try{ localStorage.removeItem(KEY); }catch(e){} location.reload(); }
+function cap(w){ return w ? w[0].toUpperCase()+w.slice(1) : w; }
+
+function say(who,text){
+  const p=document.createElement("p");
+  if(who===NAME) p.className="fox";
+  p.textContent=who+" "+text;
+  document.getElementById("log").appendChild(p);
+  p.scrollIntoView({behavior:"smooth"});
 }
-document.getElementById("ask").addEventListener("click",answer);
-document.getElementById("q").addEventListener("keydown",e=>{if(e.key==="Enter")answer();});
+
+function greet(){ return "⌨️ Hey "+first+", what do you want to tell me today?"; }
+
+function answer(t){
+  if(step===1){
+    const words = t.replace(/^.*=\s*/,"").replace(/[()]/g,"").trim().split(/\s+/).filter(Boolean);
+    if(!words.length) return "What's your first name and screen name? Like 🙋‍♂️=Jim Danger";
+    first = cap(words[0]);
+    screen = words.length>1 ? words.slice(1).join(" ") : first;
+    step = 2;
+    return "Nice to meet you, "+first+"! Send me an emoji that describes you.";
+  }
+  if(step===2){
+    look = t.split("=")[0].trim() || t;
+    step = 3; save();
+    showForget();
+    return greet();
+  }
+  if(step===4){
+    if(!t.includes("🦊")) return "💤";
+    step = 3;
+    return greet();
+  }
+  if(/\b(your name|who are you)\b/i.test(t)) return "I'm Fox. Tell me your story with emojis.";
+  const lines=[];
+  for(const e in story){ if(e!=="🦊" && t.includes(e)) lines.push(story[e]); }
+  if(lines.length) return lines.join(" ")+" What happens next, "+first+"?";
+  if(/\p{Extended_Pictographic}/u.test(t)) return "Ooh, a mystery. The story keeps going. What happens next, "+first+"?";
+  return "This is story mode, "+first+". Tell me your story with emojis.";
+}
+
+function who(){ return step>=3 || step===4 ? look+me+" "+screen : (me||"You"); }
+
+function send(){
+  const q=document.getElementById("q");
+  const t=q.value.trim();
+  if(!t) return;
+  say(who(),t);
+  say(NAME,answer(t));
+  q.value="";
+  q.focus();
+}
+
+function showForget(){ document.getElementById("forget").hidden=false; }
+function openChat(){
+  document.getElementById("pick").hidden=true;
+  document.getElementById("row").hidden=false;
+}
+
+const saved = load();
+if(saved && saved.first){
+  ({me,first,screen,look} = saved);
+  step = 4;
+  openChat(); showForget();
+  say(NAME,"💤");
+  document.getElementById("q").placeholder="Type 🦊 to wake Fox";
+} else {
+  say(NAME,"Hi! I'm Fox. Are you 🙋‍♂️ or 🙋‍♀️?");
+}
+document.querySelectorAll(".who").forEach(b=>b.onclick=()=>{
+  me=b.dataset.g;
+  say(me,me);
+  openChat();
+  step=1;
+  say(NAME,"What's your first name and screen name? Like "+me+"=Jim Danger");
+  document.getElementById("q").focus();
+});
+document.getElementById("ask").onclick=send;
+document.getElementById("forget").onclick=forget;
+document.getElementById("q").addEventListener("keydown",e=>{ if(e.key==="Enter") send(); });
 </script>
 </body>
 </html>
