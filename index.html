@@ -97,12 +97,21 @@ document.body.appendChild(s);
 </script>
 <script>
 const NAME = "🦊";
-// Story mode. Shadow Fox learns new emojis you teach her (saved on this device).
+// Chat mode. Shadow Fox learns anything you teach her (saved on this device).
+const basics = {
+  "hi":"Hey {name}! 🦊",
+  "hello":"Hello {name}! 🦊",
+  "hey":"Hey {name}! What's up?",
+  "how are you":"I'm doing good, {name}. How are you?",
+  "thanks":"Anytime, {name}. 🫡",
+  "thank you":"You're welcome, {name}. 🫡",
+  "good night":"Good night, {name}. 💤",
+  "bye":"See you later, {name}. 🦋"
+};
 const story = {
   "🦋":"A butterfly drifts in on the wind and lands on your shoulder.",
   "🫡":"A soldier stands tall and salutes. The mission begins.",
   "🪖":"Helmet on. Boots laced. Time to move out.",
-  "🦊":"That's me! Shadow Fox slips quietly into the story.",
   "🐶":"A loyal dog runs up, tail wagging, ready for the adventure.",
   "🐕":"A loyal dog runs up, tail wagging, ready for the adventure.",
   "🐱":"A cat watches from a windowsill, pretending not to care.",
@@ -149,6 +158,8 @@ function load(){ try{ return JSON.parse(localStorage.getItem(KEY)); }catch(e){ r
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify({me,first,screen,look})); }catch(e){} }
 function forget(){ try{ localStorage.removeItem(KEY); }catch(e){} location.reload(); }
 function cap(w){ return w ? w[0].toUpperCase()+w.slice(1) : w; }
+function norm(t){ return t.toLowerCase().replace(/[.!?,]+/g,"").replace(/\s+/g," ").trim(); }
+function fill(s){ return s.replace(/\{name\}/g, first); }
 
 function say(who,text){
   const p=document.createElement("p");
@@ -175,30 +186,23 @@ function answer(t){
     showForget();
     return greet();
   }
-  if(step===4){
-    if(!t.includes("🦊")) return "💤";
-    step = 3;
-    return greet();
-  }
   if(step===5){
     step = 3;
-    if(/^skip$/i.test(t)) return "No problem. What happens next, "+first+"?";
-    learned[pending] = t;
+    if(/^skip$/i.test(t)) return "No problem, "+first+". What else is on your mind?";
+    learned[norm(pending)] = t;
     saveLearned();
-    return "Got it! Now I know "+pending+". What happens next, "+first+"?";
+    return "Got it! Now I know what to say to that. 🧠";
   }
-  if(/\b(your name|who are you)\b/i.test(t)) return "I'm Shadow Fox. Tell me your story with emojis.";
-  if(learned[t]) return learned[t]+" What happens next, "+first+"?";
+  const n = norm(t);
+  if(learned[n]) return learned[n];
+  if(basics[n]) return fill(basics[n]);
+  if(/\b(your name|who are you)\b/i.test(t)) return "I'm Shadow Fox. Talk to me, and if I don't know something, you can teach me.";
   const lines=[];
-  for(const e in story){ if(e!=="🦊" && t.includes(e)) lines.push(story[e]); }
-  for(const e in learned){ if(t.includes(e)) lines.push(learned[e]); }
-  if(lines.length) return lines.join(" ")+" What happens next, "+first+"?";
-  if(/\p{Extended_Pictographic}/u.test(t)){
-    pending = t;
-    step = 5;
-    return "Ooh, a mystery! I don't know "+t+" yet. Teach me: what happens in the story? (Type skip to move on.)";
-  }
-  return "This is story mode, "+first+". Tell me your story with emojis.";
+  for(const e in story){ if(t.includes(e)) lines.push(story[e]); }
+  if(lines.length) return lines.join(" ");
+  pending = t;
+  step = 5;
+  return "I don't know how to answer that yet, "+first+". What should I say? (Type skip to move on.)";
 }
 
 function who(){ return step>=3 ? look+me+" "+screen : (me||"You"); }
@@ -222,10 +226,9 @@ function openChat(){
 const saved = load();
 if(saved && saved.first){
   ({me,first,screen,look} = saved);
-  step = 4;
+  step = 3;
   openChat(); showForget();
-  say(NAME,"💤");
-  document.getElementById("q").placeholder="Type 🦊 to wake Shadow Fox";
+  say(NAME,greet());
 } else {
   say(NAME,"Hi! I'm Shadow Fox. Are you 🙋‍♂️ or 🙋‍♀️?");
 }
