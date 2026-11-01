@@ -30,6 +30,7 @@ h1{font-size:clamp(2.6rem,12vw,5.5rem);letter-spacing:.06em;margin-top:10px;colo
 #log a{color:#ffb3b0;font-weight:600}
 #row{display:flex;gap:8px;margin-top:12px}
 #q{flex:1;min-width:0;font-size:20px;padding:12px;border:2px solid #3fd4ff;border-radius:10px;background:#02040c;color:#eaffff}
+#q:disabled,#ask:disabled{opacity:.4}
 #ask{font-size:20px;padding:12px 18px;border:0;border-radius:10px;background:#0a8cff;color:#fff;box-shadow:0 0 12px rgba(10,140,255,.6)}
 #pick{display:flex;gap:16px;justify-content:center;margin-top:16px}
 .who{font-size:56px;padding:12px 24px;border:2px solid #3fd4ff;border-radius:16px;background:rgba(63,212,255,.08)}
@@ -79,7 +80,7 @@ h1{font-size:clamp(2.6rem,12vw,5.5rem);letter-spacing:.06em;margin-top:10px;colo
   <button class="who" data-g="🙋‍♀️" aria-label="Female">🙋‍♀️</button>
 </div>
 <div id="row" hidden>
-  <input id="q" placeholder="Type here" aria-label="Type here">
+  <input id="q" placeholder="Type here" aria-label="Type here" autocomplete="off" autocorrect="off">
   <button id="ask">Send</button>
 </div>
 <button id="forget" hidden>Not you? Start over</button>
@@ -98,7 +99,8 @@ document.body.appendChild(s);
 </script>
 <script>
 const NAME = "🦊";
-// Emoji-only story chat. Lessons are shared through Firebase after approval. Personal answers stay on this device.
+// Teaching mode: users teach Fox what emojis mean with the formula 🦋=love+life=🦋
+// Each lesson goes to the shared Firebase "lessons" collection (approved:false until Chris approves).
 const firebaseConfig = {
   apiKey: "AIzaSyBBRbt0JQd-TI6D-1jmTN0FHxkB4ycSCiw",
   authDomain: "shadow-fox-d95ea.firebaseapp.com",
@@ -107,90 +109,41 @@ const firebaseConfig = {
   messagingSenderId: "922726338375",
   appId: "1:922726338375:web:6de960ba7bbda2ae0fc662"
 };
-const QUESTIONS = [
-  ["What's your favorite color?","Favorite color"],
-  ["What's your favorite animal?","Favorite animal"],
-  ["What's your favorite food?","Favorite food"],
-  ["What kind of music do you like?","Music you like"],
-  ["Do you have any pets?","Your pets"],
-  ["What makes you smile?","What makes you smile"],
-  ["What's your favorite time of day?","Favorite time of day"],
-  ["If you could go anywhere, where would you go?","Where you'd go"],
-  ["What's something you're good at?","Something you're good at"],
-  ["What's your favorite emoji?","Favorite emoji"]
-];
-const ASK_EVERY = 999;
-const NEXT = ["What happens next?","Then what happened?","Tell me more!","What's going on now?"];
-const HELP = "Talk to me in emojis! 🤷 = I ask you something. 🧠 = what I know about you. ⏭️ = skip. ❓ = help.";
 const KOFI = "https://ko-fi.com/iunderstand";
 const KOFI_START = "Shadow Fox is free! Chris builds me on a phone and a Chromebook. Help him get a desktop so I can keep growing:";
-const KOFI_LATER = "I love your story, {name}! If you're enjoying me, help Chris keep me growing:";
-const KOFI_AFTER = 10;
-const basics = {
-  "👋":"Hey {name}! 🦊",
-  "🤝":"Good to see you, {name}. 🫡",
-  "👍":"Got it, {name}! 🦊"
-};
-const story = {
-  "🦋":"A butterfly drifts in on the wind and lands on your shoulder.",
-  "🫡":"A soldier stands tall and salutes. The mission begins.",
-  "🪖":"Helmet on. Boots laced. Time to move out.",
-  "🐶":"A loyal dog runs up, tail wagging, ready for the adventure.",
-  "🐕":"A loyal dog runs up, tail wagging, ready for the adventure.",
-  "🐱":"A cat watches from a windowsill, pretending not to care.",
-  "🐴":"A horse stamps its hooves, ready to ride. The cavalry is here.",
-  "🌙":"Night falls, and the stars come out one by one.",
-  "⭐":"A star shines brighter than all the others.",
-  "☀️":"The sun rises and warms everything it touches.",
-  "🌧️":"Rain starts to fall, soft at first, then harder.",
-  "⛈️":"Thunder cracks across the sky. A storm is coming.",
-  "🔥":"A fire crackles, and everyone gathers close.",
-  "🌊":"Waves crash against the shore.",
-  "🌲":"The path leads into a deep, quiet forest.",
-  "⛰️":"A mountain rises ahead. The climb will be long.",
-  "🏠":"Home is just ahead, lights glowing in the window.",
-  "🚗":"Engines start. The road stretches out ahead.",
-  "✈️":"The plane lifts off and the ground falls away.",
-  "🗺️":"A map unrolls, showing a place no one has been.",
-  "🔑":"A key turns, and a door creaks open.",
-  "💎":"Something glitters in the dark. Treasure.",
-  "👑":"A crown rests on an empty throne.",
-  "⚔️":"Swords are drawn. The battle begins.",
-  "🛡️":"A shield goes up just in time.",
-  "📖":"A book falls open to a page no one has read.",
-  "🙏":"A quiet prayer is spoken, and the air feels still.",
-  "❤️":"Love fills the room.",
-  "😢":"A tear falls. Even heroes feel sad sometimes.",
-  "😂":"Everyone bursts out laughing.",
-  "😡":"Anger flashes, hot and loud.",
-  "😴":"Eyes grow heavy. Time to rest.",
-  "👻":"A ghost floats by, more curious than scary.",
-  "🐉":"A dragon unfolds its wings above the valley.",
-  "🎉":"Celebration! Music and cheering everywhere.",
-  "🎂":"A cake with candles glowing. Someone's birthday!",
-  "🍕":"Pizza arrives just in time."
-};
+const LESSON_CAP = 10;
+const EXAMPLE = "🦋=love+life=🦋";
+const CAP_MSG = "🧠🔟 Thank you for teaching Fox! ☕ Donations help Chris keep building her, or tap Start over to teach 10 more.";
 
-let step = 0, me = "", first = "", screen = "", look = "", pending = "", qi = -1, count = 0, msgs = 0, kofiLaterShown = false;
+let step = 0, me = "", first = "", screen = "", look = "", taught = 0;
 const KEY = "fox-user";
-const LKEY = "fox-learned";
 const FKEY = "fox-facts";
-let learned = {}, facts = {}, shared = {};
-try{ learned = JSON.parse(localStorage.getItem(LKEY)) || {}; }catch(e){ learned = {}; }
-try{ facts = JSON.parse(localStorage.getItem(FKEY)) || {}; }catch(e){ facts = {}; }
-function saveLearned(){ try{ localStorage.setItem(LKEY, JSON.stringify(learned)); }catch(e){} }
-function saveFacts(){ try{ localStorage.setItem(FKEY, JSON.stringify(facts)); }catch(e){} }
+const TKEY = "fox-taught";
+try{ taught = parseInt(localStorage.getItem(TKEY)) || 0; }catch(e){ taught = 0; }
+function saveTaught(){ try{ localStorage.setItem(TKEY, String(taught)); }catch(e){} }
 function load(){ try{ return JSON.parse(localStorage.getItem(KEY)); }catch(e){ return null; } }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify({me,first,screen,look})); }catch(e){} }
-function forget(){ try{ localStorage.removeItem(KEY); localStorage.removeItem(FKEY); }catch(e){} location.reload(); }
+function forget(){ try{ localStorage.removeItem(KEY); localStorage.removeItem(FKEY); localStorage.removeItem(TKEY); }catch(e){} location.reload(); }
 function cap(w){ return w ? w[0].toUpperCase()+w.slice(1) : w; }
-function norm(t){ return t.toLowerCase().replace(/[.!?,]+/g,"").replace(/\s+/g," ").trim(); }
-function fill(s){ return s.replace(/\{name\}/g, first); }
 function noG(s){ return (s||"").replace(/🙋‍♂️|🙋‍♀️|🙋/g,"").trim(); }
 function onlyEmoji(s){ return s.replace(/[\p{L}\p{N}]/gu,"").replace(/[!-\/:-@\[-`{-~]/g,"").replace(/\s+/g," ").trim(); }
-function nextQ(){ for(let i=0;i<QUESTIONS.length;i++){ if(!(i in facts)) return i; } return -1; }
-function nextLine(){ return NEXT[Math.floor(Math.random()*NEXT.length)]+" 🦊"; }
 function emojiBox(){ document.getElementById("q").placeholder = "Emojis only 🦊"; }
+function teachBox(){ document.getElementById("q").placeholder = EXAMPLE; }
+
+// Checks the formula: emoji = meaning + meaning = same emoji
+function parseLesson(t){
+  const parts = t.split("=");
+  if(parts.length < 3) return {err:"form"};
+  const clean = s => s.replace(/\uFE0F/g,"").replace(/\s+/g,"");
+  const left = parts[0].trim(), right = parts[parts.length-1].trim();
+  const desc = parts.slice(1,-1).join("=").trim();
+  if(!left || !right || !desc) return {err:"form"};
+  if(/[\p{L}\p{N}]/u.test(left) || !/\p{Extended_Pictographic}/u.test(left)) return {err:"form"};
+  if(clean(left) !== clean(right)) return {err:"match"};
+  const list = desc.split("+").map(s=>s.trim()).filter(Boolean).slice(0,10).map(s=>s.slice(0,60));
+  if(!list.length) return {err:"form"};
+  return {e:left, list:list};
+}
 
 let db = null, fs = null;
 async function cloudInit(){
@@ -198,8 +151,6 @@ async function cloudInit(){
     const appMod = await import("https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js");
     fs = await import("https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js");
     db = fs.getFirestore(appMod.initializeApp(firebaseConfig));
-    const snap = await fs.getDocs(fs.query(fs.collection(db,"lessons"), fs.where("approved","==",true)));
-    snap.forEach(d=>{ const x = d.data(); if(x.key && x.reply) shared[x.key] = x.reply; });
   }catch(e){}
 }
 function cloudSend(key, reply){
@@ -229,20 +180,31 @@ function foxSay(text){
   setTimeout(()=>{ p.textContent = NAME+" "+text; p.scrollIntoView({behavior:"smooth"}); }, 1400);
 }
 
-function kofiSay(text){
-  setTimeout(()=>{
-    const p = say(NAME, fill(text)+" ");
-    const a = document.createElement("a");
-    a.href = KOFI; a.target = "_blank"; a.rel = "noopener";
-    a.textContent = "☕ Ko-fi";
-    p.appendChild(a);
-    p.scrollIntoView({behavior:"smooth"});
-  }, 2200);
-}kofiSay = function(text){ const isStart = text===KOFI_START; setTimeout(()=>{ const log=document.getElementById("log"); const p=say(NAME, fill(text)+" "); const a=document.createElement("a"); a.href=KOFI; a.target="_blank"; a.rel="noopener"; a.textContent="☕ Ko-fi"; p.appendChild(a); if(isStart){ const g=log.children[log.children.length-2]; if(g) log.insertBefore(p,g); } p.scrollIntoView({behavior:"smooth"}); }, isStart ? 100 : 2200); };
-(function(){ const p=document.createElement("p"); p.className="fox"; p.textContent="☕ "+KOFI_START+" "; const a=document.createElement("a"); a.href=KOFI; a.target="_blank"; a.rel="noopener"; a.textContent="☕ Ko-fi"; p.appendChild(a); document.getElementById("log").appendChild(p); })(); kofiSay = function(text){ if(text===KOFI_START) return; setTimeout(()=>{ const p=say(NAME, fill(text)+" "); const a=document.createElement("a"); a.href=KOFI; a.target="_blank"; a.rel="noopener"; a.textContent="☕ Ko-fi"; p.appendChild(a); p.scrollIntoView({behavior:"smooth"}); }, 2200); };
+function kofiLine(text){
+  const p = say(NAME, text+" ");
+  const a = document.createElement("a");
+  a.href = KOFI; a.target = "_blank"; a.rel = "noopener";
+  a.textContent = "☕ Ko-fi";
+  p.appendChild(a);
+  p.scrollIntoView({behavior:"smooth"});
+}
 
+// Ko-fi note at the top of the chat
+(function(){ const p=document.createElement("p"); p.className="fox"; p.textContent="☕ "+KOFI_START+" "; const a=document.createElement("a"); a.href=KOFI; a.target="_blank"; a.rel="noopener"; a.textContent="☕ Ko-fi"; p.appendChild(a); document.getElementById("log").appendChild(p); })();
 
-function greet(){ return "Hey "+first+"! What's going on today?"; }
+function lockChat(){
+  document.getElementById("q").disabled = true;
+  document.getElementById("ask").disabled = true;
+  document.getElementById("q").placeholder = "🦊🧠🔟";
+}
+function showCap(delay){
+  lockChat();
+  setTimeout(()=>kofiLine(CAP_MSG), delay||0);
+}
+
+function greet(){
+  return "Hey "+first+"! Teach me what emojis mean to you. Type it like this: "+EXAMPLE+" Use + for more than one meaning. 🧠 "+taught+"/"+LESSON_CAP;
+}
 
 function answer(t){
   if(step===1){
@@ -258,80 +220,43 @@ function answer(t){
     look = noG(t).split(/\s+/)[0] || "";
     step = 3; save();
     showForget();
+    teachBox();
     return greet();
   }
-  if(step===5){
-    step = 3;
-    if(t.includes("⏭")) return "No problem, "+first+". ⏭️";
-    const k = norm(pending);
-    learned[k] = t;
-    saveLearned();
-    cloudSend(k, t);
-    return "Got it! 🧠 "+t+" I also sent it for approval, so every Fox can learn it.";
-  }
-  if(step===6){
-    step = 3;
-    if(t.includes("⏭")){ facts[qi] = ""; saveFacts(); return "No problem, "+first+". ⏭️"; }
-    facts[qi] = t;
-    saveFacts();
-    return "Thanks, "+first+"! I'll remember that. 🧠";
-  }
-  const n = norm(t);
-  if(t.includes("🤷")){
-    const nq = nextQ();
-    if(nq<0) return "I've asked all my questions, "+first+"! What's going on with you?";
-    qi = nq; step = 6; count = 0;
-    return QUESTIONS[nq][0]+" Answer in emojis. (⏭️ to skip)";
-  }
-  if(n==="🧠"){
-    const known = [];
-    for(let i=0;i<QUESTIONS.length;i++){ if(facts[i]) known.push(QUESTIONS[i][1]+": "+facts[i]); }
-    if(!known.length) return "Not much yet, "+first+"! Send 🤷 and I'll learn about you.";
-    return "Here's what I know about you, "+first+". "+known.join(". ")+".";
-  }
-  if(n==="❓") return "I'm Shadow Fox. "+HELP;
-  if(learned[n]) return learned[n];
-  if(shared[n]) return shared[n];
-  if(basics[n]) return fill(basics[n]);
-  const lines=[];
-  for(const e in story){ if(t.includes(e)) lines.push(story[e]); }
-  for(const e in learned){ if(!/[a-z0-9]/.test(e) && n.includes(e)) lines.push(learned[e]); }
-  for(const e in shared){ if(!learned[e] && !/[a-z0-9]/.test(e) && n.includes(e)) lines.push(shared[e]); }
-  if(lines.length) return lines.join(" ");
-  pending = t;
-  step = 5;
-  return "I don't know "+t+" yet, "+first+". Teach me with emojis: what should I say? (⏭️ to skip)";
+  return "";
 }
 
 function who(){ return step>=3 ? noG(look)+me+" "+screen : (me||"You"); }
 
+function teach(t){
+  say(who(), t);
+  if(taught >= LESSON_CAP){ showCap(); return; }
+  const m = parseLesson(t);
+  if(m.err==="match"){ foxSay("❌ The emoji has to match on both ends, like "+EXAMPLE); return; }
+  if(m.err){ foxSay("❌ Type it like this: "+EXAMPLE); return; }
+  cloudSend(m.e, m.list.join(" + "));
+  taught++; saveTaught();
+  foxSay("✅ "+m.e+" = "+m.list.join(" + ")+"  🧠 "+taught+"/"+LESSON_CAP);
+  if(taught >= LESSON_CAP) showCap(1600);
+}
+
 function send(){
   const q=document.getElementById("q");
   let t=q.value.trim();
-  if(!t) return;
+  if(!t || q.disabled) return;
+  if(step===3){
+    q.value="";
+    teach(t);
+    q.focus();
+    return;
+  }
   if(step!==1){
     t = onlyEmoji(t);
     if(!t){ q.value=""; foxSay("Emojis only, "+(first||"friend")+"! 🦊"); return; }
   }
-  const before = step;
   say(who(),t);
-  let r = answer(t);
-  if(before===2) kofiSay(KOFI_START);
-  if(step===3 && before!==2){
-    count++;
-    const nq = nextQ();
-    if(count>=ASK_EVERY && nq>=0){
-      count = 0; qi = nq; step = 6;
-      r += " Can I ask you something? "+QUESTIONS[nq][0]+" Answer in emojis. (⏭️ to skip)";
-    } else if(!/\?$/.test(r)){
-      r += " "+nextLine();
-    }
-  }
-  if(before>=3){
-    msgs++;
-    if(msgs>=KOFI_AFTER && !kofiLaterShown){ kofiLaterShown = true; kofiSay(KOFI_LATER); }
-  }
-  foxSay(r);
+  const r = answer(t);
+  if(r) foxSay(r);
   q.value="";
   q.focus();
 }
@@ -347,9 +272,9 @@ const saved = load();
 if(saved && saved.first){
   ({me,first,screen,look} = saved);
   step = 3;
-  openChat(); showForget(); emojiBox();
-  foxSay(greet());
-  kofiSay(KOFI_START);
+  openChat(); showForget(); teachBox();
+  if(taught >= LESSON_CAP) showCap();
+  else foxSay(greet());
 } else {
   foxSay("Hi! I'm Shadow Fox. Are you 🙋‍♂️ or 🙋‍♀️?");
 }
