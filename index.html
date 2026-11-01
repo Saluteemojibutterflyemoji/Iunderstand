@@ -97,7 +97,7 @@ document.body.appendChild(s);
 </script>
 <script>
 const NAME = "🦊";
-// Chat mode. Lessons are shared through Firebase after approval. Personal answers stay on this device.
+// Emoji-only chat. Lessons are shared through Firebase after approval. Personal answers stay on this device.
 const firebaseConfig = {
   apiKey: "AIzaSyBBRbt0JQd-TI6D-1jmTN0FHxkB4ycSCiw",
   authDomain: "shadow-fox-d95ea.firebaseapp.com",
@@ -111,7 +111,7 @@ const QUESTIONS = [
   ["What's your favorite animal?","Favorite animal"],
   ["What's your favorite food?","Favorite food"],
   ["What kind of music do you like?","Music you like"],
-  ["Do you have any pets? What are their names?","Your pets"],
+  ["Do you have any pets?","Your pets"],
   ["What makes you smile?","What makes you smile"],
   ["What's your favorite time of day?","Favorite time of day"],
   ["If you could go anywhere, where would you go?","Where you'd go"],
@@ -119,15 +119,11 @@ const QUESTIONS = [
   ["What's your favorite emoji?","Favorite emoji"]
 ];
 const ASK_EVERY = 3;
+const HELP = "Talk to me in emojis! 🤷 = I ask you something. 🧠 = what I know about you. ⏭️ = skip. ❓ = help.";
 const basics = {
-  "hi":"Hey {name}! 🦊",
-  "hello":"Hello {name}! 🦊",
-  "hey":"Hey {name}! What's up?",
-  "how are you":"I'm doing good, {name}. How are you?",
-  "thanks":"Anytime, {name}. 🫡",
-  "thank you":"You're welcome, {name}. 🫡",
-  "good night":"Good night, {name}. 💤",
-  "bye":"See you later, {name}. 🦋"
+  "👋":"Hey {name}! 🦊",
+  "🤝":"Good to see you, {name}. 🫡",
+  "👍":"Got it, {name}! 🦊"
 };
 const story = {
   "🦋":"A butterfly drifts in on the wind and lands on your shoulder.",
@@ -185,7 +181,9 @@ function cap(w){ return w ? w[0].toUpperCase()+w.slice(1) : w; }
 function norm(t){ return t.toLowerCase().replace(/[.!?,]+/g,"").replace(/\s+/g," ").trim(); }
 function fill(s){ return s.replace(/\{name\}/g, first); }
 function noG(s){ return (s||"").replace(/🙋‍♂️|🙋‍♀️|🙋/g,"").trim(); }
+function onlyEmoji(s){ return s.replace(/[\p{L}\p{N}]/gu,"").replace(/[!-\/:-@\[-`{-~]/g,"").replace(/\s+/g," ").trim(); }
 function nextQ(){ for(let i=0;i<QUESTIONS.length;i++){ if(!(i in facts)) return i; } return -1; }
+function emojiBox(){ document.getElementById("q").placeholder = "Emojis only 🦊"; }
 
 let db = null, fs = null;
 async function cloudInit(){
@@ -224,7 +222,7 @@ function foxSay(text){
   setTimeout(()=>{ p.textContent = NAME+" "+text; p.scrollIntoView({behavior:"smooth"}); }, 1400);
 }
 
-function greet(){ return "Hey "+first+", what do you want to tell me today?"; }
+function greet(){ return "Hey "+first+"! "+HELP; }
 
 function answer(t){
   if(step===1){
@@ -233,48 +231,48 @@ function answer(t){
     first = cap(words[0]);
     screen = words.length>1 ? words.slice(1).join(" ") : first;
     step = 2;
+    emojiBox();
     return "Nice to meet you, "+first+"! Now send me one emoji that describes you, like 🤓 or 🦋";
   }
   if(step===2){
-    look = noG(t.replace(/=/g," ")).split(/\s+/)[0] || "";
+    look = noG(t).split(/\s+/)[0] || "";
     step = 3; save();
     showForget();
     return greet();
   }
   if(step===5){
     step = 3;
-    if(/^skip$/i.test(t)) return "No problem, "+first+". What else is on your mind?";
+    if(t.includes("⏭")) return "No problem, "+first+". ⏭️";
     const k = norm(pending);
     learned[k] = t;
     saveLearned();
     cloudSend(k, t);
-    return "Got it! Now I know what to say to that. 🧠 I also sent it for approval, so every Fox can learn it.";
+    return "Got it! 🧠 "+t+" I also sent it for approval, so every Fox can learn it.";
   }
   if(step===6){
     step = 3;
-    if(/^skip$/i.test(t)){ facts[qi] = ""; saveFacts(); return "No problem, "+first+"."; }
+    if(t.includes("⏭")){ facts[qi] = ""; saveFacts(); return "No problem, "+first+". ⏭️"; }
     facts[qi] = t;
     saveFacts();
     return "Thanks, "+first+"! I'll remember that. 🧠";
   }
-  if(t.includes("🤷")) t = "ask me";
   const n = norm(t);
-  if(n==="ask me"){
+  if(t.includes("🤷")){
     const nq = nextQ();
     if(nq<0) return "I've asked you all my questions, "+first+"! 🦊";
     qi = nq; step = 6; count = 0;
-    return QUESTIONS[nq][0]+" (Type skip to pass.)";
+    return QUESTIONS[nq][0]+" Answer in emojis. (⏭️ to skip)";
   }
-  if(n==="what do you know about me"){
+  if(n==="🧠"){
     const known = [];
     for(let i=0;i<QUESTIONS.length;i++){ if(facts[i]) known.push(QUESTIONS[i][1]+": "+facts[i]); }
-    if(!known.length) return "Not much yet, "+first+"! Type ask me and I'll learn about you.";
+    if(!known.length) return "Not much yet, "+first+"! Send 🤷 and I'll learn about you.";
     return "Here's what I know about you, "+first+". "+known.join(". ")+".";
   }
+  if(n==="❓") return "I'm Shadow Fox. "+HELP;
   if(learned[n]) return learned[n];
   if(shared[n]) return shared[n];
   if(basics[n]) return fill(basics[n]);
-  if(/\b(your name|who are you)\b/i.test(t)) return "I'm Shadow Fox. Talk to me, teach me, or type ask me and I'll get to know you.";
   const lines=[];
   for(const e in story){ if(t.includes(e)) lines.push(story[e]); }
   for(const e in learned){ if(!/[a-z0-9]/.test(e) && n.includes(e)) lines.push(learned[e]); }
@@ -282,22 +280,26 @@ function answer(t){
   if(lines.length) return lines.join(" ");
   pending = t;
   step = 5;
-  return "I don't know how to answer that yet, "+first+". What should I say? (Type skip to move on.)";
+  return "I don't know "+t+" yet, "+first+". Teach me with emojis: what should I say? (⏭️ to skip)";
 }
 
 function who(){ return step>=3 ? noG(look)+me+" "+screen : (me||"You"); }
 
 function send(){
   const q=document.getElementById("q");
-  const t=q.value.trim();
+  let t=q.value.trim();
   if(!t) return;
+  if(step!==1){
+    t = onlyEmoji(t);
+    if(!t){ q.value=""; foxSay("Emojis only, "+(first||"friend")+"! 🦊"); return; }
+  }
   say(who(),t);
   let r = answer(t);
   if(step===3){
     count++;
     if(count>=ASK_EVERY){
       const nq = nextQ();
-      if(nq>=0){ count = 0; qi = nq; step = 6; r += " Can I ask you something? "+QUESTIONS[nq][0]; }
+      if(nq>=0){ count = 0; qi = nq; step = 6; r += " Can I ask you something? "+QUESTIONS[nq][0]+" Answer in emojis. (⏭️ to skip)"; }
     }
   }
   foxSay(r);
@@ -316,7 +318,7 @@ const saved = load();
 if(saved && saved.first){
   ({me,first,screen,look} = saved);
   step = 3;
-  openChat(); showForget();
+  openChat(); showForget(); emojiBox();
   foxSay(greet());
 } else {
   foxSay("Hi! I'm Shadow Fox. Are you 🙋‍♂️ or 🙋‍♀️?");
