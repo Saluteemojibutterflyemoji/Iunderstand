@@ -97,7 +97,20 @@ document.body.appendChild(s);
 </script>
 <script>
 const NAME = "🦊";
-// Chat mode. Shadow Fox learns anything you teach her (saved on this device).
+// Chat mode. Shadow Fox learns what you teach her and asks you questions (saved on this device).
+const QUESTIONS = [
+  ["What's your favorite color?","Favorite color"],
+  ["What's your favorite animal?","Favorite animal"],
+  ["What's your favorite food?","Favorite food"],
+  ["What kind of music do you like?","Music you like"],
+  ["Do you have any pets? What are their names?","Your pets"],
+  ["What makes you smile?","What makes you smile"],
+  ["What's your favorite time of day?","Favorite time of day"],
+  ["If you could go anywhere, where would you go?","Where you'd go"],
+  ["What's something you're good at?","Something you're good at"],
+  ["What's your favorite emoji?","Favorite emoji"]
+];
+const ASK_EVERY = 3;
 const basics = {
   "hi":"Hey {name}! 🦊",
   "hello":"Hello {name}! 🦊",
@@ -148,18 +161,22 @@ const story = {
   "🍕":"Pizza arrives just in time."
 };
 
-let step = 0, me = "", first = "", screen = "", look = "", pending = "";
+let step = 0, me = "", first = "", screen = "", look = "", pending = "", qi = -1, count = 0;
 const KEY = "fox-user";
 const LKEY = "fox-learned";
-let learned = {};
+const FKEY = "fox-facts";
+let learned = {}, facts = {};
 try{ learned = JSON.parse(localStorage.getItem(LKEY)) || {}; }catch(e){ learned = {}; }
+try{ facts = JSON.parse(localStorage.getItem(FKEY)) || {}; }catch(e){ facts = {}; }
 function saveLearned(){ try{ localStorage.setItem(LKEY, JSON.stringify(learned)); }catch(e){} }
+function saveFacts(){ try{ localStorage.setItem(FKEY, JSON.stringify(facts)); }catch(e){} }
 function load(){ try{ return JSON.parse(localStorage.getItem(KEY)); }catch(e){ return null; } }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify({me,first,screen,look})); }catch(e){} }
-function forget(){ try{ localStorage.removeItem(KEY); }catch(e){} location.reload(); }
+function forget(){ try{ localStorage.removeItem(KEY); localStorage.removeItem(FKEY); }catch(e){} location.reload(); }
 function cap(w){ return w ? w[0].toUpperCase()+w.slice(1) : w; }
 function norm(t){ return t.toLowerCase().replace(/[.!?,]+/g,"").replace(/\s+/g," ").trim(); }
 function fill(s){ return s.replace(/\{name\}/g, first); }
+function nextQ(){ for(let i=0;i<QUESTIONS.length;i++){ if(!(i in facts)) return i; } return -1; }
 
 function say(who,text){
   const p=document.createElement("p");
@@ -193,15 +210,32 @@ function answer(t){
     saveLearned();
     return "Got it! Now I know what to say to that. 🧠";
   }
+  if(step===6){
+    step = 3;
+    if(/^skip$/i.test(t)){ facts[qi] = ""; saveFacts(); return "No problem, "+first+"."; }
+    facts[qi] = t;
+    saveFacts();
+    return "Thanks, "+first+"! I'll remember that. 🧠";
+  }
   const n = norm(t);
+  if(n==="ask me"){
+    const nq = nextQ();
+    if(nq<0) return "I've asked you all my questions, "+first+"! 🦊";
+    qi = nq; step = 6; count = 0;
+    return QUESTIONS[nq][0]+" (Type skip to pass.)";
+  }
+  if(n==="what do you know about me"){
+    const known = [];
+    for(let i=0;i<QUESTIONS.length;i++){ if(facts[i]) known.push(QUESTIONS[i][1]+": "+facts[i]); }
+    if(!known.length) return "Not much yet, "+first+"! Type ask me and I'll learn about you.";
+    return "Here's what I know about you, "+first+". "+known.join(". ")+".";
+  }
   if(learned[n]) return learned[n];
   if(basics[n]) return fill(basics[n]);
-  if(/\b(your name|who are you)\b/i.test(t)) return "I'm Shadow Fox. Talk to me, and if I don't know something, you can teach me.";
+  if(/\b(your name|who are you)\b/i.test(t)) return "I'm Shadow Fox. Talk to me, teach me, or type ask me and I'll get to know you.";
   const lines=[];
-  for(const e in story){ if(t.includes(e)) lines.push(story[e]); }  for(const e in story){ if(t.includes(e)) lines.push(story[e]); }
+  for(const e in story){ if(t.includes(e)) lines.push(story[e]); }
   for(const e in learned){ if(!/[a-z0-9]/.test(e) && n.includes(e)) lines.push(learned[e]); }
-
-
   if(lines.length) return lines.join(" ");
   pending = t;
   step = 5;
@@ -215,7 +249,15 @@ function send(){
   const t=q.value.trim();
   if(!t) return;
   say(who(),t);
-  say(NAME,answer(t));
+  let r = answer(t);
+  if(step===3){
+    count++;
+    if(count>=ASK_EVERY){
+      const nq = nextQ();
+      if(nq>=0){ count = 0; qi = nq; step = 6; r += " Can I ask you something? "+QUESTIONS[nq][0]; }
+    }
+  }
+  say(NAME,r);
   q.value="";
   q.focus();
 }
