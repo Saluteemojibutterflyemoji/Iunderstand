@@ -203,7 +203,7 @@ function showCap(delay){
 }
 
 function greet(){
-  return "Hey "+first+"! Teach me what emojis mean to you. Type it like this: "+EXAMPLE+" Use + for more than one meaning. 🧠 "+taught+"/"+LESSON_CAP;
+  return "Hey! Teach me what emojis mean to you. Type it like this: "+EXAMPLE+" Use + for more than one meaning. 🧠 "+taught+"/"+LESSON_CAP;
 }
 
 function answer(t){
@@ -226,7 +226,7 @@ function answer(t){
   return "";
 }
 
-function who(){ return step>=3 ? noG(look)+me+" "+screen : (me||"You"); }
+function who(){ return (noG(look)+me+(screen?" "+screen:"")) || "You"; }
 
 function teach(t){
   say(who(), t);
@@ -269,7 +269,7 @@ function openChat(){
 
 cloudInit();
 const saved = load();
-if(saved && saved.first){
+if(saved && saved.me){
   ({me,first,screen,look} = saved);
   step = 3;
   openChat(); showForget(); teachBox();
@@ -282,8 +282,9 @@ document.querySelectorAll(".who").forEach(b=>b.onclick=()=>{
   me=b.dataset.g;
   say(me,"");
   openChat();
-  step=1;
-  foxSay("Type your first name and a made-up name, like Jim Danger");
+  step=3; save();
+  showForget(); teachBox();
+  foxSay(greet());
   document.getElementById("q").focus();
 });
 document.getElementById("ask").onclick=send;
