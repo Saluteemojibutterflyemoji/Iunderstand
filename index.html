@@ -238,7 +238,8 @@ function kofiSay(text){
     p.appendChild(a);
     p.scrollIntoView({behavior:"smooth"});
   }, 2200);
-}
+}kofiSay = function(text){ const isStart = text===KOFI_START; setTimeout(()=>{ const log=document.getElementById("log"); const p=say(NAME, fill(text)+" "); const a=document.createElement("a"); a.href=KOFI; a.target="_blank"; a.rel="noopener"; a.textContent="☕ Ko-fi"; p.appendChild(a); if(isStart){ const g=log.children[log.children.length-2]; if(g) log.insertBefore(p,g); } p.scrollIntoView({behavior:"smooth"}); }, isStart ? 100 : 2200); };
+
 
 function greet(){ return "Hey "+first+"! What's going on today?"; }
 
