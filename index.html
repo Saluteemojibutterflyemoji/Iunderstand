@@ -97,7 +97,7 @@ document.body.appendChild(s);
 </script>
 <script>
 const NAME = "🦊";
-// Story mode: nothing here is real life, it is all story. Nothing is saved.
+// Story mode. Shadow Fox learns new emojis you teach her (saved on this device).
 const story = {
   "🦋":"A butterfly drifts in on the wind and lands on your shoulder.",
   "🫡":"A soldier stands tall and salutes. The mission begins.",
@@ -139,8 +139,12 @@ const story = {
   "🍕":"Pizza arrives just in time."
 };
 
-let step = 0, me = "", first = "", screen = "", look = "";
+let step = 0, me = "", first = "", screen = "", look = "", pending = "";
 const KEY = "fox-user";
+const LKEY = "fox-learned";
+let learned = {};
+try{ learned = JSON.parse(localStorage.getItem(LKEY)) || {}; }catch(e){ learned = {}; }
+function saveLearned(){ try{ localStorage.setItem(LKEY, JSON.stringify(learned)); }catch(e){} }
 function load(){ try{ return JSON.parse(localStorage.getItem(KEY)); }catch(e){ return null; } }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify({me,first,screen,look})); }catch(e){} }
 function forget(){ try{ localStorage.removeItem(KEY); }catch(e){} location.reload(); }
@@ -176,15 +180,28 @@ function answer(t){
     step = 3;
     return greet();
   }
+  if(step===5){
+    step = 3;
+    if(/^skip$/i.test(t)) return "No problem. What happens next, "+first+"?";
+    learned[pending] = t;
+    saveLearned();
+    return "Got it! Now I know "+pending+". What happens next, "+first+"?";
+  }
   if(/\b(your name|who are you)\b/i.test(t)) return "I'm Shadow Fox. Tell me your story with emojis.";
+  if(learned[t]) return learned[t]+" What happens next, "+first+"?";
   const lines=[];
   for(const e in story){ if(e!=="🦊" && t.includes(e)) lines.push(story[e]); }
+  for(const e in learned){ if(t.includes(e)) lines.push(learned[e]); }
   if(lines.length) return lines.join(" ")+" What happens next, "+first+"?";
-  if(/\p{Extended_Pictographic}/u.test(t)) return "Ooh, a mystery. The story keeps going. What happens next, "+first+"?";
+  if(/\p{Extended_Pictographic}/u.test(t)){
+    pending = t;
+    step = 5;
+    return "Ooh, a mystery! I don't know "+t+" yet. Teach me: what happens in the story? (Type skip to move on.)";
+  }
   return "This is story mode, "+first+". Tell me your story with emojis.";
 }
 
-function who(){ return step>=3 || step===4 ? look+me+" "+screen : (me||"You"); }
+function who(){ return step>=3 ? look+me+" "+screen : (me||"You"); }
 
 function send(){
   const q=document.getElementById("q");
