@@ -22,6 +22,19 @@ h1{font-size:clamp(2.6rem,12vw,5.5rem);letter-spacing:.06em;margin-top:10px;colo
 .virtues{margin-top:22px;letter-spacing:.3em;font-size:.85rem;color:var(--neon);text-shadow:0 0 8px var(--glow)}
 .final{margin-top:30px;font-size:1.5rem;color:#fff;text-shadow:0 0 10px var(--neon),0 0 30px var(--glow)}
 .sig{margin-top:18px;font-size:1.6rem}
+.chat{width:100%;max-width:560px;margin-top:40px;padding:20px 16px;border:1px solid rgba(63,212,255,.35);border-radius:18px;background:rgba(5,15,35,.7);box-shadow:0 0 24px rgba(10,140,255,.25);text-align:left;position:relative}
+.chat h2{text-align:center;font-size:1.3rem;color:#eaffff;text-shadow:0 0 10px var(--neon);margin-bottom:10px}
+#logo{display:block;width:70%;max-width:240px;margin:6px auto 14px;border-radius:14px;box-shadow:0 0 18px rgba(63,212,255,.5)}
+#log p{font-size:20px;line-height:1.4;margin:10px 0;color:#dff6ff}
+#log .fox{color:#7fe6ff;text-shadow:0 0 6px rgba(63,212,255,.6)}
+#row{display:flex;gap:8px;margin-top:12px}
+#q{flex:1;min-width:0;font-size:20px;padding:12px;border:2px solid #3fd4ff;border-radius:10px;background:#02040c;color:#eaffff}
+#ask{font-size:20px;padding:12px 18px;border:0;border-radius:10px;background:#0a8cff;color:#fff;box-shadow:0 0 12px rgba(10,140,255,.6)}
+#pick{display:flex;gap:16px;justify-content:center;margin-top:16px}
+.who{font-size:56px;padding:12px 24px;border:2px solid #3fd4ff;border-radius:16px;background:rgba(63,212,255,.08)}
+#forget{display:block;margin:20px auto 0;background:none;border:0;color:#9fd8ee;font-size:16px;text-decoration:underline}
+#kofi{display:block;width:fit-content;margin:28px auto 8px;padding:14px 26px;background:#ff5e5b;color:#fff;font-size:20px;font-weight:600;text-decoration:none;border-radius:999px;position:relative}
+[hidden]{display:none!important}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
 </head>
@@ -56,6 +69,21 @@ h1{font-size:clamp(2.6rem,12vw,5.5rem);letter-spacing:.06em;margin-top:10px;colo
 <p class="virtues">COURAGE · LOYALTY · FREEDOM</p>
 <p class="final">Forever in our hearts</p>
 <p class="sig">🫡🦋</p>
+<section class="chat">
+<h2>Talk with Shadow Fox</h2>
+<img id="logo" src="IMG_8065.jpeg" alt="Shadow Fox">
+<div id="log" aria-live="polite"></div>
+<div id="pick">
+  <button class="who" data-g="🙋‍♂️" aria-label="Male">🙋‍♂️</button>
+  <button class="who" data-g="🙋‍♀️" aria-label="Female">🙋‍♀️</button>
+</div>
+<div id="row" hidden>
+  <input id="q" placeholder="Type here" aria-label="Type here">
+  <button id="ask">Send</button>
+</div>
+<button id="forget" hidden>Not you? Start over</button>
+</section>
+<a id="kofi" href="https://ko-fi.com/iunderstand" target="_blank" rel="noopener">☕ Support me on Ko-fi</a>
 
 <script>
 for(let i=0;i<60;i++){
@@ -66,6 +94,135 @@ s.style.top=Math.random()*100+'vh';
 s.style.animationDelay=Math.random()*3+'s';
 document.body.appendChild(s);
 }
+</script>
+<script>
+const NAME = "🦊";
+// Story mode: nothing here is real life, it is all story. Nothing is saved.
+const story = {
+  "🦋":"A butterfly drifts in on the wind and lands on your shoulder.",
+  "🫡":"A soldier stands tall and salutes. The mission begins.",
+  "🪖":"Helmet on. Boots laced. Time to move out.",
+  "🦊":"That's me! Shadow Fox slips quietly into the story.",
+  "🐶":"A loyal dog runs up, tail wagging, ready for the adventure.",
+  "🐕":"A loyal dog runs up, tail wagging, ready for the adventure.",
+  "🐱":"A cat watches from a windowsill, pretending not to care.",
+  "🐴":"A horse stamps its hooves, ready to ride. The cavalry is here.",
+  "🌙":"Night falls, and the stars come out one by one.",
+  "⭐":"A star shines brighter than all the others.",
+  "☀️":"The sun rises and warms everything it touches.",
+  "🌧️":"Rain starts to fall, soft at first, then harder.",
+  "⛈️":"Thunder cracks across the sky. A storm is coming.",
+  "🔥":"A fire crackles, and everyone gathers close.",
+  "🌊":"Waves crash against the shore.",
+  "🌲":"The path leads into a deep, quiet forest.",
+  "⛰️":"A mountain rises ahead. The climb will be long.",
+  "🏠":"Home is just ahead, lights glowing in the window.",
+  "🚗":"Engines start. The road stretches out ahead.",
+  "✈️":"The plane lifts off and the ground falls away.",
+  "🗺️":"A map unrolls, showing a place no one has been.",
+  "🔑":"A key turns, and a door creaks open.",
+  "💎":"Something glitters in the dark. Treasure.",
+  "👑":"A crown rests on an empty throne.",
+  "⚔️":"Swords are drawn. The battle begins.",
+  "🛡️":"A shield goes up just in time.",
+  "📖":"A book falls open to a page no one has read.",
+  "🙏":"A quiet prayer is spoken, and the air feels still.",
+  "❤️":"Love fills the room.",
+  "😢":"A tear falls. Even heroes feel sad sometimes.",
+  "😂":"Everyone bursts out laughing.",
+  "😡":"Anger flashes, hot and loud.",
+  "😴":"Eyes grow heavy. Time to rest.",
+  "👻":"A ghost floats by, more curious than scary.",
+  "🐉":"A dragon unfolds its wings above the valley.",
+  "🎉":"Celebration! Music and cheering everywhere.",
+  "🎂":"A cake with candles glowing. Someone's birthday!",
+  "🍕":"Pizza arrives just in time."
+};
+
+let step = 0, me = "", first = "", screen = "", look = "";
+const KEY = "fox-user";
+function load(){ try{ return JSON.parse(localStorage.getItem(KEY)); }catch(e){ return null; } }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify({me,first,screen,look})); }catch(e){} }
+function forget(){ try{ localStorage.removeItem(KEY); }catch(e){} location.reload(); }
+function cap(w){ return w ? w[0].toUpperCase()+w.slice(1) : w; }
+
+function say(who,text){
+  const p=document.createElement("p");
+  if(who===NAME) p.className="fox";
+  p.textContent=who+" "+text;
+  document.getElementById("log").appendChild(p);
+  if(document.getElementById("log").children.length>1) p.scrollIntoView({behavior:"smooth"});
+}
+
+function greet(){ return "⌨️ Hey "+first+", what do you want to tell me today?"; }
+
+function answer(t){
+  if(step===1){
+    const words = t.replace(/^.*=\s*/,"").replace(/[()]/g,"").trim().split(/\s+/).filter(Boolean);
+    if(!words.length) return "What's your first name and screen name? Like 🙋‍♂️=Jim Danger";
+    first = cap(words[0]);
+    screen = words.length>1 ? words.slice(1).join(" ") : first;
+    step = 2;
+    return "Nice to meet you, "+first+"! Send me an emoji that describes you.";
+  }
+  if(step===2){
+    look = t.split("=")[0].trim() || t;
+    step = 3; save();
+    showForget();
+    return greet();
+  }
+  if(step===4){
+    if(!t.includes("🦊")) return "💤";
+    step = 3;
+    return greet();
+  }
+  if(/\b(your name|who are you)\b/i.test(t)) return "I'm Shadow Fox. Tell me your story with emojis.";
+  const lines=[];
+  for(const e in story){ if(e!=="🦊" && t.includes(e)) lines.push(story[e]); }
+  if(lines.length) return lines.join(" ")+" What happens next, "+first+"?";
+  if(/\p{Extended_Pictographic}/u.test(t)) return "Ooh, a mystery. The story keeps going. What happens next, "+first+"?";
+  return "This is story mode, "+first+". Tell me your story with emojis.";
+}
+
+function who(){ return step>=3 || step===4 ? look+me+" "+screen : (me||"You"); }
+
+function send(){
+  const q=document.getElementById("q");
+  const t=q.value.trim();
+  if(!t) return;
+  say(who(),t);
+  say(NAME,answer(t));
+  q.value="";
+  q.focus();
+}
+
+function showForget(){ document.getElementById("forget").hidden=false; }
+function openChat(){
+  document.getElementById("pick").hidden=true;
+  document.getElementById("row").hidden=false;
+}
+
+const saved = load();
+if(saved && saved.first){
+  ({me,first,screen,look} = saved);
+  step = 4;
+  openChat(); showForget();
+  say(NAME,"💤");
+  document.getElementById("q").placeholder="Type 🦊 to wake Shadow Fox";
+} else {
+  say(NAME,"Hi! I'm Shadow Fox. Are you 🙋‍♂️ or 🙋‍♀️?");
+}
+document.querySelectorAll(".who").forEach(b=>b.onclick=()=>{
+  me=b.dataset.g;
+  say(me,me);
+  openChat();
+  step=1;
+  say(NAME,"What's your first name and screen name? Like "+me+"=Jim Danger");
+  document.getElementById("q").focus();
+});
+document.getElementById("ask").onclick=send;
+document.getElementById("forget").onclick=forget;
+document.getElementById("q").addEventListener("keydown",e=>{ if(e.key==="Enter") send(); });
 </script>
 </body>
 </html>
