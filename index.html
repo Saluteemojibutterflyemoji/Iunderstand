@@ -222,7 +222,7 @@ function foxSay(text){
   setTimeout(()=>{ p.textContent = NAME+" "+text; p.scrollIntoView({behavior:"smooth"}); }, 1400);
 }
 
-function greet(){ return "Hey "+first+"! "+HELP; }
+function greet(){ return "Hey "+first+"! "+HELP; }greet = function(){ return "Hey "+first+"! 🦊"; };
 
 function answer(t){
   if(step===1){
