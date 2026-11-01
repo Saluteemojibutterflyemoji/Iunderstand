@@ -176,29 +176,37 @@ function forget(){ try{ localStorage.removeItem(KEY); localStorage.removeItem(FK
 function cap(w){ return w ? w[0].toUpperCase()+w.slice(1) : w; }
 function norm(t){ return t.toLowerCase().replace(/[.!?,]+/g,"").replace(/\s+/g," ").trim(); }
 function fill(s){ return s.replace(/\{name\}/g, first); }
+function noG(s){ return (s||"").replace(/🙋‍♂️|🙋‍♀️|🙋/g,"").trim(); }
 function nextQ(){ for(let i=0;i<QUESTIONS.length;i++){ if(!(i in facts)) return i; } return -1; }
 
 function say(who,text){
   const p=document.createElement("p");
   if(who===NAME) p.className="fox";
-  p.textContent=who+" "+text;
+  p.textContent=text ? who+" "+text : who;
   document.getElementById("log").appendChild(p);
   if(document.getElementById("log").children.length>1) p.scrollIntoView({behavior:"smooth"});
+  return p;
 }
 
-function greet(){ return "⌨️ Hey "+first+", what do you want to tell me today?"; }
+function foxSay(text){
+  const p = say(NAME,"💭");
+  setTimeout(()=>{ p.textContent = NAME+" ⌨️"; }, 700);
+  setTimeout(()=>{ p.textContent = NAME+" "+text; p.scrollIntoView({behavior:"smooth"}); }, 1400);
+}
+
+function greet(){ return "Hey "+first+", what do you want to tell me today?"; }
 
 function answer(t){
   if(step===1){
-    const words = t.replace(/^.*=\s*/,"").replace(/[()]/g,"").trim().split(/\s+/).filter(Boolean);
-    if(!words.length) return "What's your first name and screen name? Like 🙋‍♂️=Jim Danger";
+    const words = noG(t).replace(/=/g," ").replace(/[()]/g,"").trim().split(/\s+/).filter(Boolean);
+    if(!words.length) return "Type your first name and a made-up name, like Jim Danger";
     first = cap(words[0]);
     screen = words.length>1 ? words.slice(1).join(" ") : first;
     step = 2;
-    return "Nice to meet you, "+first+"! Send me an emoji that describes you.";
+    return "Nice to meet you, "+first+"! Now send me one emoji that describes you, like 🤓 or 🦋";
   }
   if(step===2){
-    look = t.split("=")[0].trim() || t;
+    look = noG(t.replace(/=/g," ")).split(/\s+/)[0] || "";
     step = 3; save();
     showForget();
     return greet();
@@ -242,7 +250,7 @@ function answer(t){
   return "I don't know how to answer that yet, "+first+". What should I say? (Type skip to move on.)";
 }
 
-function who(){ return step>=3 ? look+me+" "+screen : (me||"You"); }
+function who(){ return step>=3 ? noG(look)+me+" "+screen : (me||"You"); }
 
 function send(){
   const q=document.getElementById("q");
@@ -257,7 +265,7 @@ function send(){
       if(nq>=0){ count = 0; qi = nq; step = 6; r += " Can I ask you something? "+QUESTIONS[nq][0]; }
     }
   }
-  say(NAME,r);
+  foxSay(r);
   q.value="";
   q.focus();
 }
@@ -273,16 +281,16 @@ if(saved && saved.first){
   ({me,first,screen,look} = saved);
   step = 3;
   openChat(); showForget();
-  say(NAME,greet());
+  foxSay(greet());
 } else {
-  say(NAME,"Hi! I'm Shadow Fox. Are you 🙋‍♂️ or 🙋‍♀️?");
+  foxSay("Hi! I'm Shadow Fox. Are you 🙋‍♂️ or 🙋‍♀️?");
 }
 document.querySelectorAll(".who").forEach(b=>b.onclick=()=>{
   me=b.dataset.g;
-  say(me,me);
+  say(me,"");
   openChat();
   step=1;
-  say(NAME,"What's your first name and screen name? Like "+me+"=Jim Danger");
+  foxSay("Type your first name and a made-up name, like Jim Danger");
   document.getElementById("q").focus();
 });
 document.getElementById("ask").onclick=send;
