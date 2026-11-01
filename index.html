@@ -198,7 +198,10 @@ function answer(t){
   if(basics[n]) return fill(basics[n]);
   if(/\b(your name|who are you)\b/i.test(t)) return "I'm Shadow Fox. Talk to me, and if I don't know something, you can teach me.";
   const lines=[];
-  for(const e in story){ if(t.includes(e)) lines.push(story[e]); }
+  for(const e in story){ if(t.includes(e)) lines.push(story[e]); }  for(const e in story){ if(t.includes(e)) lines.push(story[e]); }
+  for(const e in learned){ if(!/[a-z0-9]/.test(e) && n.includes(e)) lines.push(learned[e]); }
+
+
   if(lines.length) return lines.join(" ");
   pending = t;
   step = 5;
