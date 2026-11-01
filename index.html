@@ -224,7 +224,7 @@ function answer(t){
     facts[qi] = t;
     saveFacts();
     return "Thanks, "+first+"! I'll remember that. 🧠";
-  }
+  }if(t.includes("🤷")) t = "ask me";if(t.includes("🤷‍♀️")) t = "ask me";
   const n = norm(t);
   if(n==="ask me"){
     const nq = nextQ();
