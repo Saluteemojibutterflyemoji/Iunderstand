@@ -27,6 +27,7 @@ h1{font-size:clamp(2.6rem,12vw,5.5rem);letter-spacing:.06em;margin-top:10px;colo
 #logo{display:block;width:70%;max-width:240px;margin:6px auto 14px;border-radius:14px;box-shadow:0 0 18px rgba(63,212,255,.5)}
 #log p{font-size:20px;line-height:1.4;margin:10px 0;color:#dff6ff}
 #log .fox{color:#7fe6ff;text-shadow:0 0 6px rgba(63,212,255,.6)}
+#log a{color:#ffb3b0;font-weight:600}
 #row{display:flex;gap:8px;margin-top:12px}
 #q{flex:1;min-width:0;font-size:20px;padding:12px;border:2px solid #3fd4ff;border-radius:10px;background:#02040c;color:#eaffff}
 #ask{font-size:20px;padding:12px 18px;border:0;border-radius:10px;background:#0a8cff;color:#fff;box-shadow:0 0 12px rgba(10,140,255,.6)}
@@ -97,7 +98,7 @@ document.body.appendChild(s);
 </script>
 <script>
 const NAME = "🦊";
-// Emoji-only chat. Lessons are shared through Firebase after approval. Personal answers stay on this device.
+// Emoji-only story chat. Lessons are shared through Firebase after approval. Personal answers stay on this device.
 const firebaseConfig = {
   apiKey: "AIzaSyBBRbt0JQd-TI6D-1jmTN0FHxkB4ycSCiw",
   authDomain: "shadow-fox-d95ea.firebaseapp.com",
@@ -118,8 +119,13 @@ const QUESTIONS = [
   ["What's something you're good at?","Something you're good at"],
   ["What's your favorite emoji?","Favorite emoji"]
 ];
-const ASK_EVERY = 3;
+const ASK_EVERY = 999;
+const NEXT = ["What happens next?","Then what happened?","Tell me more!","What's going on now?"];
 const HELP = "Talk to me in emojis! 🤷 = I ask you something. 🧠 = what I know about you. ⏭️ = skip. ❓ = help.";
+const KOFI = "https://ko-fi.com/iunderstand";
+const KOFI_START = "Shadow Fox is free! Chris builds me on a phone and a Chromebook. Help him get a desktop so I can keep growing:";
+const KOFI_LATER = "I love your story, {name}! If you're enjoying me, help Chris keep me growing:";
+const KOFI_AFTER = 10;
 const basics = {
   "👋":"Hey {name}! 🦊",
   "🤝":"Good to see you, {name}. 🫡",
@@ -165,7 +171,7 @@ const story = {
   "🍕":"Pizza arrives just in time."
 };
 
-let step = 0, me = "", first = "", screen = "", look = "", pending = "", qi = -1, count = 0;
+let step = 0, me = "", first = "", screen = "", look = "", pending = "", qi = -1, count = 0, msgs = 0, kofiLaterShown = false;
 const KEY = "fox-user";
 const LKEY = "fox-learned";
 const FKEY = "fox-facts";
@@ -183,6 +189,7 @@ function fill(s){ return s.replace(/\{name\}/g, first); }
 function noG(s){ return (s||"").replace(/🙋‍♂️|🙋‍♀️|🙋/g,"").trim(); }
 function onlyEmoji(s){ return s.replace(/[\p{L}\p{N}]/gu,"").replace(/[!-\/:-@\[-`{-~]/g,"").replace(/\s+/g," ").trim(); }
 function nextQ(){ for(let i=0;i<QUESTIONS.length;i++){ if(!(i in facts)) return i; } return -1; }
+function nextLine(){ return NEXT[Math.floor(Math.random()*NEXT.length)]+" 🦊"; }
 function emojiBox(){ document.getElementById("q").placeholder = "Emojis only 🦊"; }
 
 let db = null, fs = null;
@@ -222,7 +229,18 @@ function foxSay(text){
   setTimeout(()=>{ p.textContent = NAME+" "+text; p.scrollIntoView({behavior:"smooth"}); }, 1400);
 }
 
-function greet(){ return "Hey "+first+"! "+HELP; }greet = function(){ return "Hey "+first+"! 🦊"; };
+function kofiSay(text){
+  setTimeout(()=>{
+    const p = say(NAME, fill(text)+" ");
+    const a = document.createElement("a");
+    a.href = KOFI; a.target = "_blank"; a.rel = "noopener";
+    a.textContent = "☕ Ko-fi";
+    p.appendChild(a);
+    p.scrollIntoView({behavior:"smooth"});
+  }, 2200);
+}
+
+function greet(){ return "Hey "+first+"! What's going on today?"; }
 
 function answer(t){
   if(step===1){
@@ -259,7 +277,7 @@ function answer(t){
   const n = norm(t);
   if(t.includes("🤷")){
     const nq = nextQ();
-    if(nq<0) return "I've asked you all my questions, "+first+"! 🦊";
+    if(nq<0) return "I've asked all my questions, "+first+"! What's going on with you?";
     qi = nq; step = 6; count = 0;
     return QUESTIONS[nq][0]+" Answer in emojis. (⏭️ to skip)";
   }
@@ -293,14 +311,23 @@ function send(){
     t = onlyEmoji(t);
     if(!t){ q.value=""; foxSay("Emojis only, "+(first||"friend")+"! 🦊"); return; }
   }
+  const before = step;
   say(who(),t);
   let r = answer(t);
-  if(step===3){
+  if(before===2) kofiSay(KOFI_START);
+  if(step===3 && before!==2){
     count++;
-    if(count>=ASK_EVERY){
-      const nq = nextQ();
-      if(nq>=0){ count = 0; qi = nq; step = 6; r += " Can I ask you something? "+QUESTIONS[nq][0]+" Answer in emojis. (⏭️ to skip)"; }
+    const nq = nextQ();
+    if(count>=ASK_EVERY && nq>=0){
+      count = 0; qi = nq; step = 6;
+      r += " Can I ask you something? "+QUESTIONS[nq][0]+" Answer in emojis. (⏭️ to skip)";
+    } else if(!/\?$/.test(r)){
+      r += " "+nextLine();
     }
+  }
+  if(before>=3){
+    msgs++;
+    if(msgs>=KOFI_AFTER && !kofiLaterShown){ kofiLaterShown = true; kofiSay(KOFI_LATER); }
   }
   foxSay(r);
   q.value="";
@@ -320,6 +347,7 @@ if(saved && saved.first){
   step = 3;
   openChat(); showForget(); emojiBox();
   foxSay(greet());
+  kofiSay(KOFI_START);
 } else {
   foxSay("Hi! I'm Shadow Fox. Are you 🙋‍♂️ or 🙋‍♀️?");
 }
