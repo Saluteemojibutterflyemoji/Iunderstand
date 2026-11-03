@@ -30,7 +30,6 @@ h1{font-size:clamp(2.6rem,12vw,5.5rem);letter-spacing:.06em;margin-top:10px;colo
 #log a{color:#ffb3b0;font-weight:600}
 #row{display:flex;gap:8px;margin-top:12px}
 #q{flex:1;min-width:0;font-size:20px;padding:12px;border:2px solid #3fd4ff;border-radius:10px;background:#02040c;color:#eaffff}
-#q:disabled,#ask:disabled{opacity:.4}
 #ask{font-size:20px;padding:12px 18px;border:0;border-radius:10px;background:#0a8cff;color:#fff;box-shadow:0 0 12px rgba(10,140,255,.6)}
 #pick{display:flex;gap:16px;justify-content:center;margin-top:16px}
 .who{font-size:56px;padding:12px 24px;border:2px solid #3fd4ff;border-radius:16px;background:rgba(63,212,255,.08)}
@@ -80,7 +79,7 @@ h1{font-size:clamp(2.6rem,12vw,5.5rem);letter-spacing:.06em;margin-top:10px;colo
   <button class="who" data-g="🙋‍♀️" aria-label="Female">🙋‍♀️</button>
 </div>
 <div id="row" hidden>
-  <input id="q" placeholder="Type here" aria-label="Type here" autocomplete="off" autocorrect="off">
+  <input id="q" placeholder="Talk to Fox 🦊" aria-label="Talk to Fox" autocomplete="off" autocorrect="off">
   <button id="ask">Send</button>
 </div>
 <button id="forget" hidden>Not you? Start over</button>
@@ -99,9 +98,10 @@ document.body.appendChild(s);
 </script>
 <script>
 const NAME = "🦊";
-// Teaching mode: users teach Fox what emojis mean with the formula emoji=word=emoji
-// Each lesson goes to the shared Firebase "lessons" collection (approved:false until Chris approves).
-// Fox's personality: curious and positive. After every lesson or answer she reacts happily and asks "why?" in emojis.
+// Free mode: no lesson limit. People can talk to Fox naturally, and she answers in emojis.
+// Teaching still works anytime with the formula emoji=word=emoji (Chris uses this to teach her).
+// Everything goes to the shared Firebase "lessons" collection with approved:false until Chris approves it.
+// Fox's personality: curious and positive. She reacts happily and asks "why?" in emojis.
 const firebaseConfig = {
   apiKey: "AIzaSyBBRbt0JQd-TI6D-1jmTN0FHxkB4ycSCiw",
   authDomain: "shadow-fox-d95ea.firebaseapp.com",
@@ -112,9 +112,7 @@ const firebaseConfig = {
 };
 const KOFI = "https://ko-fi.com/iunderstand";
 const KOFI_START = "Shadow Fox is free! Chris builds me on a phone and a Chromebook. Help him get a desktop so I can keep growing:";
-const LESSON_CAP = 10;
 const EXAMPLE = "🥶=chill=🥶";
-const CAP_MSG = "🧠🔟 Thank you for teaching Fox! 🥰 ☕ Donations help Chris keep building her, or tap Start over to teach 10 more.";
 
 // Fox's personality
 const HAPPY = ["😊","💖","🌟","✨","🥰","🦋","🎉","😄","🤗","💫"];
@@ -137,7 +135,25 @@ function cap(w){ return w ? w[0].toUpperCase()+w.slice(1) : w; }
 function noG(s){ return (s||"").replace(/🙋‍♂️|🙋‍♀️|🙋/g,"").trim(); }
 function onlyEmoji(s){ return s.replace(/[\p{L}\p{N}]/gu,"").replace(/[!-\/:-@\[-`{-~]/g,"").replace(/\s+/g," ").trim(); }
 function emojiBox(){ document.getElementById("q").placeholder = "Emojis only 🦊"; }
-function teachBox(){ document.getElementById("q").placeholder = EXAMPLE; }
+function talkBox(){ document.getElementById("q").placeholder = "Talk to Fox 🦊"; }
+
+// Pulls up to 3 emojis out of what someone typed, so Fox can react to them
+function emojisIn(s){
+  const m = s.match(/\p{Extended_Pictographic}(?:\uFE0F|\p{Emoji_Modifier}|\u200D\p{Extended_Pictographic}\uFE0F?)*/gu);
+  return m ? [...new Set(m)].slice(0,3) : [];
+}
+
+// Fox's brain: every emoji meaning anyone has taught her, read from Firebase
+let brain = {};
+function bkey(e){ return e.replace(/\uFE0F/g,""); }
+function learn(e, list){
+  const k = bkey(e);
+  brain[k] = brain[k] || [];
+  list.forEach(w=>{ if(w && !brain[k].some(x=>x.toLowerCase()===w.toLowerCase())) brain[k].push(w); });
+}
+function knows(e){ return brain[bkey(e)]; }
+// A lesson starts with an emoji and has an = sign
+function looksLikeLesson(t){ return t.includes("=") && /^\s*\p{Extended_Pictographic}/u.test(t); }
 
 // Checks the formula: emoji = meaning + meaning = same emoji
 function parseLesson(t){
@@ -160,6 +176,18 @@ async function cloudInit(){
     const appMod = await import("https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js");
     fs = await import("https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js");
     db = fs.getFirestore(appMod.initializeApp(firebaseConfig));
+  }catch(e){}
+}
+// Reads everything people have taught Fox (skips plain talk and "why" answers)
+async function cloudLoad(){
+  if(!db || !fs) return;
+  try{
+    const snap = await fs.getDocs(fs.query(fs.collection(db,"lessons"), fs.limit(2000)));
+    snap.forEach(d=>{
+      const x = d.data();
+      if(!x.key || !x.reply || x.key==="💬" || /^(talk|why):/.test(x.reply)) return;
+      learn(x.key, x.reply.split("+").map(s=>s.trim()).filter(Boolean));
+    });
   }catch(e){}
 }
 function cloudSend(key, reply){
@@ -189,30 +217,11 @@ function foxSay(text){
   setTimeout(()=>{ p.textContent = NAME+" "+text; p.scrollIntoView({behavior:"smooth"}); }, 1400);
 }
 
-function kofiLine(text){
-  const p = say(NAME, text+" ");
-  const a = document.createElement("a");
-  a.href = KOFI; a.target = "_blank"; a.rel = "noopener";
-  a.textContent = "☕ Ko-fi";
-  p.appendChild(a);
-  p.scrollIntoView({behavior:"smooth"});
-}
-
 // Ko-fi note at the top of the chat
 (function(){ const p=document.createElement("p"); p.className="fox"; p.textContent="☕ "+KOFI_START+" "; const a=document.createElement("a"); a.href=KOFI; a.target="_blank"; a.rel="noopener"; a.textContent="☕ Ko-fi"; p.appendChild(a); document.getElementById("log").appendChild(p); })();
 
-function lockChat(){
-  document.getElementById("q").disabled = true;
-  document.getElementById("ask").disabled = true;
-  document.getElementById("q").placeholder = "🦊🧠🔟";
-}
-function showCap(delay){
-  lockChat();
-  setTimeout(()=>kofiLine(CAP_MSG), delay||0);
-}
-
 function greet(){
-  return "Hey! 😊 I'm super curious and I love asking why! 🤔💖\nTeach me what emojis mean to you. Type it like this:\nemoji=word=emoji\n✅ "+EXAMPLE+"\n❌ 🥶=chill\nUse + for more than one meaning, like 🥶=chill+cold=🥶\nWhen I ask ❓ just answer me any way you like!\nIf I kick it out, just try again! 🧠 "+taught+"/"+LESSON_CAP;
+  return "Hey! 😊 I'm Shadow Fox, and I love asking why! 🤔💖\nTalk to me any way you like. I answer in emojis!\nWant to teach me what an emoji means? Type it like this:\nemoji=word=emoji\n✅ "+EXAMPLE+"\nUse + for more than one meaning, like 🥶=chill+cold=🥶\n🤫 No secrets please! What you teach me can be seen by others."+(taught ? "\n🧠 "+taught : "");
 }
 
 function answer(t){
@@ -229,7 +238,7 @@ function answer(t){
     look = noG(t).split(/\s+/)[0] || "";
     step = 3; save();
     showForget();
-    teachBox();
+    talkBox();
     return greet();
   }
   return "";
@@ -237,32 +246,42 @@ function answer(t){
 
 function who(){ return (noG(look)+me+(screen?" "+screen:"")) || "You"; }
 
-function teach(t){
+function talk(t){
   say(who(), t);
-  if(taught >= LESSON_CAP){ showCap(); return; }
-  // No "=" means they're answering Fox's "why?" — she loves it and stays curious
-  if(!t.includes("=")){
-    if(lastEmoji) cloudSend(lastEmoji, "why: "+t);
-    foxSay(curious(lastEmoji));
+
+  // Teaching: emoji=word=emoji
+  if(looksLikeLesson(t)){
+    const m = parseLesson(t);
+    if(m.err==="match"){ foxSay("😊 So close! The emoji has to match on both ends, like "+EXAMPLE+" Try again! 💪"); return; }
+    if(m.err){ foxSay("😊 Almost! Type it like this: emoji=word=emoji, like "+EXAMPLE+" Try again! 💪"); return; }
+    cloudSend(m.e, m.list.join(" + "));
+    const before = (knows(m.e)||[]).slice();
+    learn(m.e, m.list);
+    taught++; saveTaught();
+    lastEmoji = m.e;
+    const also = before.filter(w=>!m.list.some(x=>x.toLowerCase()===w.toLowerCase())).slice(0,3);
+    foxSay("✅ "+m.e+" = "+m.list.join(" + ")+"  🧠 "+taught+(also.length ? "\n👂 "+m.e+" = "+also.join(" + ") : "")+"\n"+curious(m.e));
     return;
   }
-  const m = parseLesson(t);
-  if(m.err==="match"){ foxSay("😊 So close! The emoji has to match on both ends, like "+EXAMPLE+" Try again! 💪"); return; }
-  if(m.err){ foxSay("😊 Almost! Type it like this: emoji=word=emoji, like "+EXAMPLE+" Try again! 💪"); return; }
-  cloudSend(m.e, m.list.join(" + "));
-  taught++; saveTaught();
-  lastEmoji = m.e;
-  foxSay("✅ "+m.e+" = "+m.list.join(" + ")+"  🧠 "+taught+"/"+LESSON_CAP+"\n"+curious(m.e));
-  if(taught >= LESSON_CAP) showCap(1600);
+
+  // Natural talk: save it, then Fox shares what she knows and stays curious
+  if(lastEmoji){ cloudSend(lastEmoji, "why: "+t); lastEmoji = ""; }
+  else { cloudSend("💬", "talk: "+t); }
+  const list = emojisIn(t);
+  const facts = list.filter(knows).map(e=>"🧠 "+e+" = "+knows(e).slice(0,3).join(" + "));
+  const unknown = list.filter(e=>!knows(e)).join("");
+  const ask = unknown || list.join("");
+  if(ask) lastEmoji = ask;
+  foxSay((facts.length ? facts.join("\n")+"\n" : "")+curious(ask));
 }
 
 function send(){
   const q=document.getElementById("q");
   let t=q.value.trim();
-  if(!t || q.disabled) return;
+  if(!t) return;
   if(step===3){
     q.value="";
-    teach(t);
+    talk(t);
     q.focus();
     return;
   }
@@ -283,14 +302,13 @@ function openChat(){
   document.getElementById("row").hidden=false;
 }
 
-cloudInit();
+cloudInit().then(cloudLoad);
 const saved = load();
 if(saved && saved.me){
   ({me,first,screen,look} = saved);
   step = 3;
-  openChat(); showForget(); teachBox();
-  if(taught >= LESSON_CAP) showCap();
-  else foxSay(greet());
+  openChat(); showForget(); talkBox();
+  foxSay(greet());
 } else {
   foxSay("Hi! 😊 I'm Shadow Fox. Are you 🙋‍♂️ or 🙋‍♀️?");
 }
@@ -299,7 +317,7 @@ document.querySelectorAll(".who").forEach(b=>b.onclick=()=>{
   say(me,"");
   openChat();
   step=3; save();
-  showForget(); teachBox();
+  showForget(); talkBox();
   foxSay(greet());
   document.getElementById("q").focus();
 });
