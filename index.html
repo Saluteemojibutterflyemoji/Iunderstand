@@ -2,42 +2,63 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1"> 
-<title>AI Unlocked | Shadow Fox by Chris Allen</title>
-
-<meta name="description" content="AI Unlocked by Chris Allen of West Jordan, Utah. Meet Shadow Fox, a curious AI who learns and talks in emojis.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eve's Diary | AI Unlocked by Chris Allen</title>
+<meta name="description" content="AI Unlocked by Chris Allen of West Jordan, Utah. Eve's Diary: tell Eve about your day and watch it written in emojis. Home of Shadow Fox.">
 <meta name="google-site-verification" content="p1PU2tsATB9FBbG-owzw_2Ilbu2nFzQA32wFVfIo0DM" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
 <style>
-:root{--neon:#3fd4ff;--glow:#0a8cff}
+:root{--neon:#3fd4ff;--glow:#0a8cff;--paper:#fbf6ea;--line:#cfe3f0;--ink:#1d2a44}
 *{box-sizing:border-box;margin:0}
-body{min-height:100vh;background:radial-gradient(ellipse at top,#0b1a3a,#02040c 70%);color:#dff6ff;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px 16px;overflow-x:hidden}
+body{min-height:100vh;background:radial-gradient(ellipse at top,#0b1a3a,#02040c 70%);color:#dff6ff;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;text-align:center;padding:28px 16px;overflow-x:hidden}
 .grid{position:fixed;inset:0;background-image:linear-gradient(rgba(63,212,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(63,212,255,.08) 1px,transparent 1px);background-size:40px 40px;-webkit-mask-image:linear-gradient(to top,#000,transparent 70%);mask-image:linear-gradient(to top,#000,transparent 70%);pointer-events:none}
 .star{position:fixed;width:2px;height:2px;background:#9fe8ff;border-radius:50%;animation:twinkle 3s infinite ease-in-out;pointer-events:none}
 @keyframes twinkle{50%{opacity:.15}}
-.butterfly{width:120px;animation:float 6s ease-in-out infinite;filter:drop-shadow(0 0 8px #3fd4ff) drop-shadow(0 0 20px #0a8cff)}
+.butterfly{width:90px;animation:float 6s ease-in-out infinite;filter:drop-shadow(0 0 8px #3fd4ff) drop-shadow(0 0 20px #0a8cff)}
 .wings{transform-origin:60px 55px;transform-box:view-box;animation:flap .7s ease-in-out infinite alternate}
 @keyframes flap{to{transform:scaleX(.35)}}
-@keyframes float{50%{transform:translateY(-12px)}}
-h1{font-size:clamp(2.6rem,12vw,5.5rem);letter-spacing:.06em;margin-top:10px;color:#eaffff;text-shadow:0 0 6px #fff,0 0 14px var(--neon),0 0 30px var(--neon),0 0 60px var(--glow);animation:flicker 6s infinite}
-@keyframes flicker{0%,92%,100%{opacity:1}93%{opacity:.55}95%{opacity:1}96%{opacity:.75}}
-.fox{width:160px;margin:20px 0;filter:drop-shadow(0 0 10px #3fd4ff) drop-shadow(0 0 26px #0a8cff)}
-.line{max-width:520px;font-size:1.15rem;line-height:1.6;color:#bfeaff}
-.virtues{margin-top:22px;letter-spacing:.3em;font-size:.85rem;color:var(--neon);text-shadow:0 0 8px var(--glow)}
-.final{margin-top:30px;font-size:1.5rem;color:#fff;text-shadow:0 0 10px var(--neon),0 0 30px var(--glow)}
-.sig{margin-top:18px;font-size:1.6rem}
-.chat{width:100%;max-width:560px;margin-top:40px;padding:20px 16px;border:1px solid rgba(63,212,255,.35);border-radius:18px;background:rgba(5,15,35,.7);box-shadow:0 0 24px rgba(10,140,255,.25);text-align:left;position:relative}
-.chat h2{text-align:center;font-size:1.3rem;color:#eaffff;text-shadow:0 0 10px var(--neon);margin-bottom:10px}
-#logo{display:block;width:70%;max-width:240px;margin:6px auto 14px;border-radius:14px;box-shadow:0 0 18px rgba(63,212,255,.5)}
-#log p{font-size:20px;line-height:1.4;margin:10px 0;color:#dff6ff;white-space:pre-line}
-#log .fox{color:#7fe6ff;text-shadow:0 0 6px rgba(63,212,255,.6)}
-#log a{color:#ffb3b0;font-weight:600}
-#row{display:flex;gap:8px;margin-top:12px}
-#q{flex:1;min-width:0;font-size:20px;padding:12px;border:2px solid #3fd4ff;border-radius:10px;background:#02040c;color:#eaffff}
-#ask{font-size:20px;padding:12px 18px;border:0;border-radius:10px;background:#0a8cff;color:#fff;box-shadow:0 0 12px rgba(10,140,255,.6)}
-#pick{display:flex;gap:16px;justify-content:center;margin-top:16px}
-.who{font-size:56px;padding:12px 24px;border:2px solid #3fd4ff;border-radius:16px;background:rgba(63,212,255,.08)}
-#forget{display:block;margin:20px auto 0;background:none;border:0;color:#9fd8ee;font-size:16px;text-decoration:underline}
-#kofi{display:block;width:fit-content;margin:28px auto 8px;padding:14px 26px;background:#ff5e5b;color:#fff;font-size:20px;font-weight:600;text-decoration:none;border-radius:999px;position:relative}
+@keyframes float{50%{transform:translateY(-10px)}}
+
+.book{width:100%;max-width:640px;margin-top:14px;position:relative}
+h1{font-family:'Dancing Script',cursive;font-weight:600;font-size:clamp(3rem,13vw,4.8rem);color:#eaffff;text-shadow:0 0 8px var(--neon),0 0 26px var(--glow);line-height:1.1}
+.stay{margin-top:4px;font-size:1.15rem;color:#bfeaff;font-style:italic}
+
+/* The diary page */
+#page{margin-top:18px;min-height:52vh;padding:28px 22px 28px 46px;text-align:left;background-color:var(--paper);background-image:linear-gradient(90deg,transparent 32px,#f2b8b8 32px,#f2b8b8 34px,transparent 34px),repeating-linear-gradient(to bottom,transparent 0,transparent 55px,var(--line) 55px,var(--line) 56px);background-position:0 0,0 20px;border-radius:6px 16px 16px 6px;box-shadow:0 0 0 1px rgba(63,212,255,.3),0 0 30px rgba(10,140,255,.3),inset 8px 0 14px rgba(0,0,0,.08);color:var(--ink);font-size:36px;line-height:56px;word-wrap:break-word}
+#page .e{display:inline-block;animation:ink .5s ease-out}
+@keyframes ink{from{opacity:0;transform:translateY(-6px) scale(.6)}to{opacity:1;transform:none}}
+#pen{display:inline-block;font-size:34px;transform-origin:bottom left;animation:wait 1.6s ease-in-out infinite}
+#pen.writing{animation:scribble .25s ease-in-out infinite alternate}
+#pen.asleep{opacity:.35;animation:none}
+@keyframes wait{50%{transform:translateY(-6px) rotate(-6deg)}}
+@keyframes scribble{to{transform:translateX(4px) rotate(8deg)}}
+#think{font-size:26px;opacity:0;transition:opacity .4s}
+#think.on{opacity:1;animation:wait 1.2s ease-in-out infinite}
+
+#status{margin-top:14px;min-height:1.6em;font-size:1.15rem;color:#bfeaff}
+#eve{min-height:1.8em;margin-top:6px;font-family:'Dancing Script',cursive;font-size:1.9rem;color:#ffd6f0;text-shadow:0 0 10px rgba(255,120,200,.6);transition:opacity .8s}
+#eve.fade{opacity:0}
+
+#mic{display:block;margin:16px auto 0;font-size:22px;padding:16px 30px;border:2px solid var(--neon);border-radius:999px;background:rgba(63,212,255,.12);color:#fff;box-shadow:0 0 16px rgba(10,140,255,.5)}
+#mic.on{background:#ff5e5b;border-color:#ff5e5b;box-shadow:0 0 18px rgba(255,94,91,.6)}
+#typeRow{display:flex;gap:8px;margin-top:14px}
+#q{flex:1;min-width:0;font-size:20px;padding:12px;border:2px solid var(--neon);border-radius:10px;background:#02040c;color:#eaffff}
+#write{font-size:20px;padding:12px 18px;border:0;border-radius:10px;background:var(--glow);color:#fff}
+
+#voice{margin:22px auto 0;max-width:640px;width:100%;border:1px solid rgba(63,212,255,.35);border-radius:12px;padding:10px 14px;text-align:left}
+#voice summary{font-size:18px;cursor:pointer;color:#eaffff}
+#voice label{display:block;margin-top:12px;font-size:17px;color:#bfeaff}
+#voice select,#voice input[type=range]{display:block;width:100%;margin-top:6px;font-size:17px}
+#voice select{padding:8px;border:2px solid var(--neon);border-radius:8px;background:#02040c;color:#eaffff}
+.vbtn{font-size:18px;margin-top:12px;margin-right:8px;padding:10px 16px;border:2px solid var(--neon);border-radius:10px;background:rgba(63,212,255,.08);color:#fff}
+
+#kofi{display:block;width:fit-content;margin:28px auto 8px;padding:14px 26px;background:#ff5e5b;color:#fff;font-size:20px;font-weight:600;text-decoration:none;border-radius:999px}
+
+.small{max-width:600px;margin-top:34px;font-size:.8rem;line-height:1.5;color:#7fa9bf}
+.small .fox{width:54px;display:block;margin:0 auto 6px;filter:drop-shadow(0 0 6px #3fd4ff)}
+.small p{margin-top:6px}
 [hidden]{display:none!important}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
@@ -56,39 +77,47 @@ h1{font-size:clamp(2.6rem,12vw,5.5rem);letter-spacing:.06em;margin-top:10px;colo
 <path d="M60 40 Q54 28 48 24 M60 40 Q66 28 72 24" stroke="#7fe6ff" stroke-width="1.5" fill="none"/>
 </svg>
 
-<h1>Shadow Fox</h1>
+<main class="book">
+  <h1>Eve's Diary</h1>
+  <p class="stay">Your words stay your words.</p>
 
-<svg class="fox" viewBox="0 0 160 140" role="img" aria-label="Glowing blue fox">
-<g fill="rgba(10,30,60,.9)" stroke="#3fd4ff" stroke-width="3" stroke-linejoin="round">
-<path d="M22 8 L62 42 L30 66 Z"/>
-<path d="M138 8 L98 42 L130 66 Z"/>
-<path d="M28 48 L80 38 L132 48 L118 88 L80 132 L42 88 Z"/>
-</g>
-<path d="M42 88 L80 132 L60 92 Z M118 88 L80 132 L100 92 Z" fill="rgba(63,212,255,.3)"/>
-<path d="M52 72 L68 78 L54 82 Z M108 72 L92 78 L106 82 Z" fill="#eaffff"/>
-<ellipse cx="80" cy="126" rx="6" ry="4" fill="#eaffff"/>
-</svg>
+  <div id="page" aria-label="Your diary page"><span id="story" aria-live="polite"></span><span id="pen" class="asleep" aria-hidden="true">✒️</span><span id="think" aria-hidden="true">💭</span></div>
 
-<p class="line">Brave, loyal, and forever free.<br>Your light still guides the way.</p>
-<p class="virtues">COURAGE · LOYALTY · FREEDOM</p>
-<p class="final">Forever in our hearts</p>
-<p class="sig">🫡🦋</p><p class="line" style="margin-top:24px">Welcome to AI Unlocked, created by Chris Allen, an Army veteran from West Jordan, Utah. Meet Shadow Fox, a curious AI who learns and speaks in emojis. Teach her what emojis mean to you, and she grows with every lesson.</p>
+  <p id="status" aria-live="polite">Tap the button, then say “Dear Diary” to begin.</p>
+  <p id="eve" aria-live="polite"></p>
 
-<section class="chat">
-<h2>Talk with Shadow Fox</h2>
-<img id="logo" src="IMG_8065.jpeg" alt="Shadow Fox">
-<div id="log" aria-live="polite"></div>
-<div id="pick">
-  <button class="who" data-g="🙋‍♂️" aria-label="Male">🙋‍♂️</button>
-  <button class="who" data-g="🙋‍♀️" aria-label="Female">🙋‍♀️</button>
-</div>
-<div id="row" hidden>
-  <input id="q" placeholder="Talk to Fox 🦊" aria-label="Talk to Fox" autocomplete="off" autocorrect="off">
-  <button id="ask">Send</button>
-</div>
-<button id="forget" hidden>Not you? Start over</button>
-</section>
+  <button id="mic">🎤 Open my diary</button>
+  <div id="typeRow" hidden>
+    <input id="q" placeholder="Start with: Dear Diary" aria-label="Write to your diary" autocomplete="off">
+    <button id="write">Write</button>
+  </div>
+</main>
+
+<details id="voice">
+  <summary>🔊 Eve's voice</summary>
+  <button class="vbtn" id="vtoggle">🔇 Voice is off, tap to turn on</button>
+  <label for="vpick">Voice</label>
+  <select id="vpick"></select>
+  <label for="vrate">Speed</label>
+  <input type="range" id="vrate" min="0.5" max="2" step="0.1" value="0.9">
+  <label for="vpitch">Pitch</label>
+  <input type="range" id="vpitch" min="0" max="2" step="0.1" value="1.2">
+  <button class="vbtn" id="vtest">▶️ Test</button>
+</details>
+
 <a id="kofi" href="https://ko-fi.com/iunderstand" target="_blank" rel="noopener">☕ Support me on Ko-fi</a>
+
+<footer class="small">
+  <svg class="fox" viewBox="0 0 160 140" role="img" aria-label="Glowing blue fox">
+  <g fill="rgba(10,30,60,.9)" stroke="#3fd4ff" stroke-width="3" stroke-linejoin="round">
+  <path d="M22 8 L62 42 L30 66 Z"/><path d="M138 8 L98 42 L130 66 Z"/>
+  <path d="M28 48 L80 38 L132 48 L118 88 L80 132 L42 88 Z"/></g>
+  <path d="M52 72 L68 78 L54 82 Z M108 72 L92 78 L106 82 Z" fill="#eaffff"/>
+  <ellipse cx="80" cy="126" rx="6" ry="4" fill="#eaffff"/>
+  </svg>
+  <p>Shadow Fox: brave, loyal, and forever free. Forever in our hearts. 🫡🦋</p>
+  <p>Welcome to AI Unlocked, created by Chris Allen, an Army veteran from West Jordan, Utah. Eve's Diary is a place to tell your day out loud and watch it written in emojis. Nothing is saved; when you close the page, your story is gone. Eve only listens and wonders; she does not give advice. Home of Shadow Fox, the curious emoji AI.</p>
+</footer>
 
 <script>
 for(let i=0;i<60;i++){
@@ -100,296 +129,250 @@ s.style.animationDelay=Math.random()*3+'s';
 document.body.appendChild(s);
 }
 </script>
+
 <script>
-const NAME = "🦊";
-// Free mode: no lesson limit. People can talk to Fox naturally, and she answers in emojis.
-// Teaching still works anytime with the formula emoji=word=emoji (Chris uses this to teach her).
-// Plus signs are only for teaching. When Fox talks, she lists meanings with commas.
-// Fox's personality: curious and positive. She reacts happily and asks "why?" in emojis.
-const firebaseConfig = {
-  apiKey: "AIzaSyBBRbt0JQd-TI6D-1jmTN0FHxkB4ycSCiw",
-  authDomain: "shadow-fox-d95ea.firebaseapp.com",
-  projectId: "shadow-fox-d95ea",
-  storageBucket: "shadow-fox-d95ea.firebasestorage.app",
-  messagingSenderId: "922726338375",
-  appId: "1:922726338375:web:6de960ba7bbda2ae0fc662"
+// =====================================================================
+// EVE'S DIARY
+// Nothing is ever saved. The story lives only on this page until it closes.
+// =====================================================================
+
+// ---- Eve's word list: the words she can turn into emojis (mostly actions) ----
+// Chris can add more anytime: "word":"emoji",
+const DICT = {
+  walk:"🚶",run:"🏃",ran:"🏃",jog:"🏃",eat:"🍽️",ate:"🍽️",drink:"🥤",drank:"🥤",sleep:"😴",slept:"😴",nap:"😴",
+  work:"💼",job:"💼",drive:"🚗",drove:"🚗",car:"🚗",bus:"🚌",cry:"😢",laugh:"😂",smile:"😊",hug:"🤗",kiss:"😘",
+  love:"❤️",pray:"🙏",prayer:"🙏",sing:"🎤",sang:"🎤",dance:"💃",play:"🎮",game:"🎮",read:"📖",write:"✍️",wrote:"✍️",
+  cook:"🍳",bake:"🧁",clean:"🧹",shop:"🛒",buy:"🛒",bought:"🛒",call:"📞",phone:"📱",talk:"🗣️",fight:"🥊",fought:"🥊",
+  swim:"🏊",swam:"🏊",fly:"✈️",flew:"✈️",rest:"🛌",wake:"⏰",woke:"⏰",shower:"🚿",bath:"🛁",study:"📚",learn:"📚",
+  teach:"🧑‍🏫",help:"🤝",give:"🎁",gave:"🎁",gift:"🎁",build:"🔨",built:"🔨",fix:"🔧",paint:"🎨",draw:"🎨",drew:"🎨",
+  watch:"📺",tv:"📺",listen:"👂",hear:"👂",heard:"👂",see:"👀",saw:"👀",look:"👀",think:"💭",thought:"💭",dream:"💭",
+  wait:"⏳",hope:"🌈",win:"🏆",won:"🏆",lose:"💔",lost:"💔",miss:"💔",hurt:"🤕",fall:"🤕",fell:"🤕",
+  home:"🏠",house:"🏠",school:"🏫",church:"⛪",store:"🏪",hospital:"🏥",doctor:"🩺",park:"🌳",beach:"🏖️",gym:"🏋️",exercise:"🏋️",
+  dog:"🐕",puppy:"🐕",cat:"🐈",kitten:"🐈",baby:"👶",kid:"🧒",kids:"🧒",child:"🧒",friend:"🧑‍🤝‍🧑",family:"👨‍👩‍👧",
+  mom:"👩",mother:"👩",dad:"👨",father:"👨",wife:"👩",husband:"👨",son:"👦",daughter:"👧",brother:"👦",sister:"👧",
+  coffee:"☕",food:"🍔",breakfast:"🥞",lunch:"🥪",dinner:"🍝",pizza:"🍕",water:"💧",
+  rain:"🌧️",sun:"☀️",sunny:"☀️",snow:"❄️",cold:"🥶",hot:"🥵",
+  tired:"😴",happy:"😊",glad:"😊",sad:"😢",angry:"😠",mad:"😠",scared:"😨",afraid:"😨",worried:"😟",nervous:"😬",
+  excited:"🤩",proud:"😌",calm:"😌",bored:"😐",sick:"🤒",lonely:"😔",peace:"🕊️",fun:"🎉",party:"🎉",birthday:"🎂",
+  money:"💰",music:"🎵",song:"🎵",movie:"🎬",morning:"🌅",night:"🌙",today:"📅",tomorrow:"📅",yesterday:"📅",
+  god:"🙏",bible:"📖",jesus:"✝️",tree:"🌳",flower:"🌸",butterfly:"🦋",fox:"🦊",good:"👍",bad:"👎",great:"🌟"
 };
-const KOFI = "https://ko-fi.com/iunderstand";
-const KOFI_START = "Shadow Fox is free! Chris builds me on a phone and a Chromebook. Help him get a desktop so I can keep growing:";
-const EXAMPLE = "🥶=chill=🥶";
+// What kind of word it is, so Eve knows which question to wonder
+const WHO = ["friend","family","mom","mother","dad","father","wife","husband","son","daughter","brother","sister","baby","kid","kids","child","doctor","god","jesus"];
+const WHERE = ["home","house","school","church","store","hospital","park","beach","gym","car","bus"];
+const WHEN = ["morning","night","today","tomorrow","yesterday","breakfast","lunch","dinner","birthday"];
+const FEEL = ["love","cry","laugh","smile","tired","happy","glad","sad","angry","mad","scared","afraid","worried","nervous","excited","proud","calm","bored","sick","lonely","hurt","miss","lose","lost","hope"];
 
-// Fox's personality
-const HAPPY = ["😊","💖","🌟","✨","🥰","🦋","🎉","😄","🤗","💫"];
-const WONDER = ["🤔❓","🧐❓","💭❓","👀❓","🤔💭❓","❓❓"];
-function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
-function joy(){ return pick(HAPPY)+pick(HAPPY); }
-function curious(e){ return joy()+" "+(e ? e+" " : "")+pick(WONDER); }
-let lastEmoji = "";
-
-let step = 0, me = "", first = "", screen = "", look = "", taught = 0;
-const KEY = "fox-user";
-const FKEY = "fox-facts";
-const TKEY = "fox-taught";
-try{ taught = parseInt(localStorage.getItem(TKEY)) || 0; }catch(e){ taught = 0; }
-function saveTaught(){ try{ localStorage.setItem(TKEY, String(taught)); }catch(e){} }
-function load(){ try{ return JSON.parse(localStorage.getItem(KEY)); }catch(e){ return null; } }
-function save(){ try{ localStorage.setItem(KEY, JSON.stringify({me,first,screen,look})); }catch(e){} }
-function forget(){ try{ localStorage.removeItem(KEY); localStorage.removeItem(FKEY); localStorage.removeItem(TKEY); }catch(e){} location.reload(); }
-function cap(w){ return w ? w[0].toUpperCase()+w.slice(1) : w; }
-function noG(s){ return (s||"").replace(/🙋‍♂️|🙋‍♀️|🙋/g,"").trim(); }
-function onlyEmoji(s){ return s.replace(/[\p{L}\p{N}]/gu,"").replace(/[!-\/:-@\[-`{-~]/g,"").replace(/\s+/g," ").trim(); }
-function emojiBox(){ document.getElementById("q").placeholder = "Emojis only 🦊"; }
-function talkBox(){ document.getElementById("q").placeholder = "Talk to Fox 🦊"; }
-
-// Pulls up to 3 emojis out of what someone typed, so Fox can react to them
-function emojisIn(s){
-  const m = s.match(/\p{Extended_Pictographic}(?:\uFE0F|\p{Emoji_Modifier}|\u200D\p{Extended_Pictographic}\uFE0F?)*/gu);
-  return m ? [...new Set(m)].slice(0,3) : [];
-}
-
-// Fox's brain: every emoji meaning anyone has taught her, read from Firebase
-let brain = {};
-function bkey(e){ return e.replace(/\uFE0F/g,""); }
-function learn(e, list){
-  const k = bkey(e);
-  brain[k] = brain[k] || [];
-  list.forEach(w=>{ if(w && !brain[k].some(x=>x.toLowerCase()===w.toLowerCase())) brain[k].push(w); });
-}
-function knows(e){ return brain[bkey(e)]; }
-// ---- Context: Fox figures out if a meaning is a person, feeling, action, or thing ----
-// Her word base is the Bible. Chris can add more words to these lists anytime.
-const BIBLE_NAMES = ["god","jesus","christ","lord","moses","abraham","isaac","jacob","joseph","david","solomon","noah","adam","eve","mary","peter","paul","john","james","matthew","mark","luke","elijah","elisha","isaiah","jeremiah","daniel","esther","ruth","sarah","rebekah","rachel","leah","samuel","saul","aaron","joshua","gideon","samson","job","jonah","judah","benjamin","lazarus","martha","timothy","thomas","andrew","philip","stephen","nevaeh","chris","ziggy"];
-const FEELINGS = ["love","joy","peace","hope","faith","grace","mercy","fear","anger","wrath","sorrow","grief","shame","pride","glad","happy","sad","chill","calm","kind","kindness","gentle","patience","patient","humble","meek","lonely","afraid","scared","thankful","grateful","blessed","peaceful","joyful","angry","worried","excited","proud","silly","playful","tired","brave","courage"];
-const ACTIONS = ["walk","pray","praise","sing","give","forgive","bless","create","speak","pray","worship","serve","teach","learn","heal","follow","believe","rejoice","weep","cry","run","rest","work","type","share","help","seek","build","play","fight","sleep","eat","read","write","sharing","giving"];
-const CUES = {
-  person: ["who","whom","he","she","him","her","his","friend","brother","sister","father","mother","son","daughter","wife","husband","name","named","mr","mrs","man","woman","child","people","guy","girl","boy"],
-  feeling: ["feel","feels","feeling","felt","i'm","im","so","very","heart","mood","emotion"],
-  action: ["do","does","doing","did","going","go","will","can","let's","lets","make","gonna","want","try"],
-  thing: ["what","this","that","it","look","looks","see","thing","picture"]
+// Eve only wonders. Short beats, never longer than 3 seconds.
+const ASK = {
+  who:["Who…?","Hmm… who?"],
+  what:["What… then?","Hmm… what?"],
+  when:["When…?","Hmm… when?"],
+  where:["Where…?","Hmm… where?"],
+  why:["Why…?","Hmm… why?","Why… why?"]
 };
-let recent = [];
-function words(s){ return (s||"").toLowerCase().replace(/[^\p{L}\p{N}'\s]/gu," ").split(/\s+/).filter(Boolean); }
-function typeOf(m){
-  const w = m.trim(), lw = words(w);
-  if(/^(mr|mrs|ms|miss|lord|king|queen|saint|uncle|aunt)\b/i.test(w)) return "person";
-  if(lw.some(x=>BIBLE_NAMES.includes(x))) return "person";
-  if(lw.some(x=>FEELINGS.includes(x))) return "feeling";
-  if(lw.some(x=>ACTIONS.includes(x) || (x.length>4 && x.endsWith("ing")))) return "action";
-  if(/^[A-Z]/.test(w) && lw.length<=2) return "person";
-  return "thing";
-}
-function cueType(text){
-  const lw = words(text); let best = null, top = 0;
-  for(const t in CUES){
-    let n = lw.filter(x=>CUES[t].includes(x)).length;
-    if(t==="action") n += lw.filter(x=>x.length>4 && x.endsWith("ing")).length;
-    if(n>top){ top=n; best=t; }
-  }
-  return best;
-}
-// Picks the meaning that fits the conversation best
-function bestMeanings(e, text, others){
-  const list = knows(e) || [];
-  const want = cueType(text);
-  const ctx = new Set(words(recent.join(" ")+" "+text));
-  others.forEach(o=>{ (knows(o)||[]).forEach(m=>words(m).forEach(w=>ctx.add(w))); });
-  const scored = list.map((m,i)=>{
-    let s = 0;
-    if(want && typeOf(m)===want) s += 3;
-    words(m).forEach(w=>{ if(w.length>2 && ctx.has(w)) s += 2; });
-    return {m, s: s - i*0.01};
-  }).sort((a,b)=>b.s-a.s);
-  if(scored.length && scored[0].s > 0) return [scored[0].m];
-  return list.slice(0,2);
-}
 
-// A lesson starts with an emoji and has an = sign
-function looksLikeLesson(t){ return t.includes("=") && /^\s*\p{Extended_Pictographic}/u.test(t); }
-
-// Checks the formula: emoji = meaning + meaning = same emoji
-function parseLesson(t){
-  const parts = t.split("=");
-  if(parts.length < 3) return {err:"form"};
-  const clean = s => s.replace(/\uFE0F/g,"").replace(/\s+/g,"");
-  const left = parts[0].trim(), right = parts[parts.length-1].trim();
-  const desc = parts.slice(1,-1).join("=").trim();
-  if(!left || !right || !desc) return {err:"form"};
-  if(/[\p{L}\p{N}]/u.test(left) || !/\p{Extended_Pictographic}/u.test(left)) return {err:"form"};
-  if(clean(left) !== clean(right)) return {err:"match"};
-  const list = desc.split("+").map(s=>s.trim()).filter(Boolean).slice(0,10).map(s=>s.slice(0,60));
-  if(!list.length) return {err:"form"};
-  return {e:left, list:list};
-}
-
-let db = null, fs = null;
-async function cloudInit(){
-  try{
-    const appMod = await import("https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js");
-    fs = await import("https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js");
-    db = fs.getFirestore(appMod.initializeApp(firebaseConfig));
-  }catch(e){}
-}
-// Reads everything people have taught Fox (skips plain talk and "why" answers)
-async function cloudLoad(){
-  if(!db || !fs) return;
-  try{
-    const snap = await fs.getDocs(fs.query(fs.collection(db,"lessons"), fs.limit(2000)));
-    snap.forEach(d=>{
-      const x = d.data();
-      if(!x.key || !x.reply || x.key==="💬" || /^(talk|why):/.test(x.reply)) return;
-      learn(x.key, x.reply.split("+").map(s=>s.trim()).filter(Boolean));
-    });
-  }catch(e){}
-}
-function cloudSend(key, reply){
-  if(!db || !fs) return;
-  try{
-    fs.addDoc(fs.collection(db,"lessons"), {
-      key: key.slice(0,100),
-      reply: reply.slice(0,300),
-      approved: false,
-      created: fs.serverTimestamp()
-    }).catch(()=>{});
-  }catch(e){}
-}
-
-function say(who,text){
-  const p=document.createElement("p");
-  if(who===NAME) p.className="fox";
-  p.textContent=text ? who+" "+text : who;
-  document.getElementById("log").appendChild(p);
-  if(document.getElementById("log").children.length>1) p.scrollIntoView({behavior:"smooth"});
-  return p;
-}
-
-// Fox's thinking rhythm: she holds her thoughts 3 seconds, then 6, then 9, and repeats.
-// Chris can change the numbers here anytime (1000 = 1 second).
+// Eve's thinking rhythm: 3, then 6, then 9 seconds, and repeat (1000 = 1 second)
 const HOLDS = [3000, 6000, 9000];
-let holdStep = 0, busy = false;
-const waiting = [];
-function foxSay(text, hold){
-  const wait = hold===false ? 1400 : HOLDS[holdStep++ % HOLDS.length];
-  busy = true;
-  const p = say(NAME,"💭");
-  setTimeout(()=>{ p.textContent = NAME+" ⌨️"; }, wait-700);
-  setTimeout(()=>{
-    p.textContent = NAME+" "+text;
-    p.scrollIntoView({behavior:"smooth"});
-    busy = false;
-    // Back to listening. If someone typed while she was thinking, she answers that next.
-    if(waiting.length) handle(waiting.shift());
-  }, wait);
+const BUMP = 1500;      // a pause this long counts as a period
+const VOICE_MAX = 3000; // Eve never speaks longer than 3 seconds
+
+// ---- Pieces of the page ----
+const $ = id => document.getElementById(id);
+const story = $("story"), pen = $("pen"), think = $("think"), statusEl = $("status"), eveEl = $("eve");
+let open = false;       // has the person said "Dear Diary"?
+let lastKinds = [];     // what kind of words were in the last bump
+let holdStep = 0, thinkTimer = null, bumpTimer = null, eveTimer = null;
+let quietUntil = 0;     // ignore the mic while Eve is talking
+
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+function setStatus(t){ statusEl.textContent = t; }
+
+// Finds a word in Eve's list, trying simple endings (running → run, cried → cry)
+function lookup(w){
+  const tries = [w, w.replace(/(.)\1ing$/,"$1"), w.replace(/ing$/,""), w.replace(/ing$/,"e"),
+    w.replace(/ied$/,"y"), w.replace(/(.)\1ed$/,"$1"), w.replace(/ed$/,""), w.replace(/ed$/,"e"),
+    w.replace(/ies$/,"y"), w.replace(/es$/,""), w.replace(/s$/,"")];
+  for(const t of tries){ if(DICT[t]) return t; }
+  return null;
 }
 
-// Ko-fi note at the top of the chat
-(function(){ const p=document.createElement("p"); p.className="fox"; p.textContent="☕ "+KOFI_START+" "; const a=document.createElement("a"); a.href=KOFI; a.target="_blank"; a.rel="noopener"; a.textContent="☕ Ko-fi"; p.appendChild(a); document.getElementById("log").appendChild(p); })();
-
-function greet(){
-  return "Hey! 😊 I'm Shadow Fox, and I love asking why! 🤔💖\nTalk to me any way you like. I answer in emojis!\nWant to teach me what an emoji means? Type it like this:\nemoji=word=emoji\n✅ "+EXAMPLE+"\nUse + for more than one meaning, like 🥶=chill+cold=🥶\n🤫 No secrets please! What you teach me can be seen by others."+(taught ? "\n🧠 "+taught : "");
+// The pen writes one emoji at a time
+const queue = [];
+let writing = false;
+function writeNext(){
+  if(!queue.length){ writing = false; pen.classList.remove("writing"); return; }
+  writing = true; pen.classList.add("writing");
+  const s = document.createElement("span");
+  s.className = "e"; s.textContent = queue.shift() + " ";
+  story.appendChild(s);
+  pen.scrollIntoView({behavior:"smooth", block:"center"});
+  setTimeout(writeNext, 450);
 }
 
-function answer(t){
-  if(step===1){
-    const words = noG(t).replace(/=/g," ").replace(/[()]/g,"").trim().split(/\s+/).filter(Boolean);
-    if(!words.length) return "Type your first name and a made-up name, like Jim Danger";
-    first = cap(words[0]);
-    screen = words.length>1 ? words.slice(1).join(" ") : first;
-    step = 2;
-    emojiBox();
-    return "Nice to meet you, "+first+"! Now send me one emoji that describes you, like 🤓 or 🦋";
+// Each bump (a little pause in their talking) becomes emojis on the page
+function bump(text){
+  let t = text.toLowerCase();
+  if(!open){
+    const i = t.search(/dear\s+dia?ry/);
+    if(i < 0){ setStatus("Say “Dear Diary” to begin."); return; }
+    open = true;
+    pen.classList.remove("asleep");
+    setStatus("Eve is listening… ✒️");
+    t = t.slice(i).replace(/dear\s+dia?ry/,"");
   }
-  if(step===2){
-    look = noG(t).split(/\s+/)[0] || "";
-    step = 3; save();
-    showForget();
-    talkBox();
-    return greet();
+  const words = t.replace(/[^a-z'\s]/g," ").split(/\s+/).filter(Boolean);
+  const found = [];
+  words.forEach(w=>{ const k = lookup(w.replace(/'s$/,"")); if(k) found.push(k); });
+  if(found.length){
+    lastKinds = found;
+    found.forEach(k=>queue.push(DICT[k]));
+    if(!writing) writeNext();
   }
-  return "";
 }
 
-function who(){ return (noG(look)+me+(screen?" "+screen:"")) || "You"; }
-
-function talk(t){
-  say(who(), t);
-
-  // Teaching: emoji=word=emoji
-  if(looksLikeLesson(t)){
-    const m = parseLesson(t);
-    if(m.err==="match"){ foxSay("😊 So close! The emoji has to match on both ends, like "+EXAMPLE+" Try again! 💪"); return; }
-    if(m.err){ foxSay("😊 Almost! Type it like this: emoji=word=emoji, like "+EXAMPLE+" Try again! 💪"); return; }
-    cloudSend(m.e, m.list.join(" + "));
-    const before = (knows(m.e)||[]).slice();
-    learn(m.e, m.list);
-    taught++; saveTaught();
-    lastEmoji = m.e;
-    const also = before.filter(w=>!m.list.some(x=>x.toLowerCase()===w.toLowerCase())).slice(0,3);
-    foxSay("✅ "+m.e+" = "+m.list.join(", ")+"  🧠 "+taught+(also.length ? "\n👂 "+m.e+" = "+also.join(", ") : "")+"\n"+curious(m.e));
-    return;
-  }
-
-  // Natural talk: save it, then Fox shares what she knows and stays curious
-  if(lastEmoji){ cloudSend(lastEmoji, "why: "+t); lastEmoji = ""; }
-  else { cloudSend("💬", "talk: "+t); }
-  const list = emojisIn(t);
-  const facts = list.filter(knows).map(e=>"🧠 "+e+" = "+bestMeanings(e, t, list.filter(o=>o!==e)).join(", "));
-  recent.push(t); if(recent.length>4) recent.shift();
-  const unknown = list.filter(e=>!knows(e)).join("");
-  const ask = unknown || list.join("");
-  if(ask) lastEmoji = ask;
-  foxSay((facts.length ? facts.join("\n")+"\n" : "")+curious(ask));
+// After a longer pause (the period), Eve thinks 3, 6 or 9 seconds, then wonders
+function wonder(){
+  if(!open) return;
+  clearTimeout(thinkTimer);
+  think.classList.add("on");
+  thinkTimer = setTimeout(()=>{
+    think.classList.remove("on");
+    let kind = "why";
+    if(lastKinds.some(k=>WHO.includes(k))) kind = pick(["who","why"]);
+    else if(lastKinds.some(k=>WHERE.includes(k))) kind = pick(["where","why"]);
+    else if(lastKinds.some(k=>WHEN.includes(k))) kind = pick(["when","what"]);
+    else if(lastKinds.some(k=>FEEL.includes(k))) kind = "why";
+    else if(lastKinds.length) kind = pick(["what","why"]);
+    const line = pick(ASK[kind]);
+    eveEl.classList.remove("fade");
+    eveEl.textContent = line;
+    clearTimeout(eveTimer);
+    eveTimer = setTimeout(()=>eveEl.classList.add("fade"), 4000);
+    eveSpeak(line);
+    lastKinds = [];
+  }, HOLDS[holdStep++ % HOLDS.length]);
 }
 
-function send(){
-  const q=document.getElementById("q");
-  const t=q.value.trim();
+// If they keep talking, Eve goes back to zero and just listens
+function backToZero(){
+  clearTimeout(thinkTimer);
+  think.classList.remove("on");
+}
+
+// ---- Listening with the microphone ----
+const Ear = window.SpeechRecognition || window.webkitSpeechRecognition;
+let ear = null, listening = false;
+if(!Ear){
+  // No microphone support in this browser: let them type instead
+  $("mic").hidden = true;
+  $("typeRow").hidden = false;
+  setStatus("Type “Dear Diary” to begin. End with . or ? when you want Eve to wonder.");
+}else{
+  ear = new Ear();
+  ear.lang = "en-US";
+  ear.continuous = true;
+  ear.interimResults = true;
+  ear.onresult = e=>{
+    if(Date.now() < quietUntil) return;
+    for(let i=e.resultIndex; i<e.results.length; i++){
+      const r = e.results[i];
+      backToZero();
+      clearTimeout(bumpTimer);
+      if(r.isFinal){
+        bump(r[0].transcript);
+        bumpTimer = setTimeout(wonder, BUMP);
+      }
+    }
+  };
+  ear.onend = ()=>{ if(listening){ try{ ear.start(); }catch(e){} } };
+  ear.onerror = e=>{
+    if(e.error==="not-allowed" || e.error==="service-not-allowed"){
+      listening = false; micLook();
+      setStatus("Eve needs permission to use the microphone.");
+    }
+  };
+  $("mic").onclick = ()=>{
+    listening = !listening;
+    micLook();
+    if(listening){
+      try{ ear.start(); }catch(e){}
+      setStatus(open ? "Eve is listening… ✒️" : "Say “Dear Diary” to begin.");
+    }else{
+      try{ ear.stop(); }catch(e){}
+      backToZero();
+      setStatus("Diary resting. Tap the button to keep talking.");
+    }
+  };
+}
+function micLook(){
+  $("mic").classList.toggle("on", listening);
+  $("mic").textContent = listening ? "🔴 Eve is listening, tap to pause" : "🎤 Open my diary";
+}
+
+// Typing fallback: a . or ? at the end is the period; leave it open and Eve stays at zero
+function typed(){
+  const t = $("q").value.trim();
   if(!t) return;
-  q.value="";
-  q.focus();
-  // If Fox is still holding her thoughts, the message waits its turn
-  if(busy){ waiting.push(t); return; }
-  handle(t);
+  $("q").value = "";
+  backToZero();
+  bump(t);
+  if(/[.?!]$/.test(t)) wonder();
 }
+$("write").onclick = typed;
+$("q").addEventListener("keydown", e=>{ if(e.key==="Enter") typed(); });
 
-function handle(t){
-  if(step===3){ talk(t); return; }
-  if(step!==1){
-    t = onlyEmoji(t);
-    if(!t){ foxSay("Emojis only, "+(first||"friend")+"! 🦊"); return; }
-  }
-  say(who(),t);
-  const r = answer(t);
-  if(r) foxSay(r);
+// ---- Eve's voice: each person picks the voice, speed and pitch they like ----
+const synth = window.speechSynthesis;
+let vset = {on:false, name:"", rate:0.9, pitch:1.2};
+try{ Object.assign(vset, JSON.parse(localStorage.getItem("eve-voice")) || {}); }catch(e){}
+function vsave(){ try{ localStorage.setItem("eve-voice", JSON.stringify(vset)); }catch(e){} }
+function eveSpeak(line, force){
+  if(!synth || (!vset.on && !force)) return;
+  try{
+    synth.cancel();
+    const u = new SpeechSynthesisUtterance(line.replace(/…/g,", "));
+    const v = synth.getVoices().find(x=>x.name===vset.name);
+    if(v){ u.voice = v; u.lang = v.lang; }
+    u.rate = vset.rate; u.pitch = vset.pitch;
+    quietUntil = Date.now() + VOICE_MAX + 600;
+    synth.speak(u);
+    setTimeout(()=>synth.cancel(), VOICE_MAX);
+  }catch(e){}
 }
-
-function showForget(){ document.getElementById("forget").hidden=false; }
-function openChat(){
-  document.getElementById("pick").hidden=true;
-  document.getElementById("row").hidden=false;
+function vtoggleText(){
+  $("vtoggle").textContent = vset.on ? "🔊 Voice is on, tap to turn off" : "🔇 Voice is off, tap to turn on";
 }
-
-cloudInit().then(cloudLoad);
-const saved = load();
-if(saved && saved.me){
-  ({me,first,screen,look} = saved);
-  step = 3;
-  openChat(); showForget(); talkBox();
-  foxSay(greet(), false);
-} else {
-  foxSay("Hi! 😊 I'm Shadow Fox. Are you 🙋‍♂️ or 🙋‍♀️?", false);
+function fillVoices(){
+  const list = synth.getVoices();
+  if(!list.length) return;
+  const sel = $("vpick");
+  sel.innerHTML = "";
+  list.forEach(v=>{
+    const o = document.createElement("option");
+    o.value = v.name; o.textContent = v.name+" ("+v.lang+")";
+    if(v.name===vset.name) o.selected = true;
+    sel.appendChild(o);
+  });
+  if(!vset.name) vset.name = sel.value;
 }
-document.querySelectorAll(".who").forEach(b=>b.onclick=()=>{
-  me=b.dataset.g;
-  say(me,"");
-  openChat();
-  step=3; save();
-  showForget(); talkBox();
-  foxSay(greet(), false);
-  document.getElementById("q").focus();
-});
-document.getElementById("ask").onclick=send;
-document.getElementById("forget").onclick=forget;
-document.getElementById("q").addEventListener("keydown",e=>{ if(e.key==="Enter") send(); });
+if(!synth){ $("voice").hidden = true; }
+else{
+  fillVoices();
+  synth.onvoiceschanged = fillVoices;
+  $("vrate").value = vset.rate;
+  $("vpitch").value = vset.pitch;
+  vtoggleText();
+  $("vtoggle").onclick = ()=>{
+    vset.on = !vset.on; vsave(); vtoggleText();
+    if(vset.on) eveSpeak("Hmm… why?");
+    else synth.cancel();
+  };
+  $("vpick").onchange = e=>{ vset.name = e.target.value; vsave(); };
+  $("vrate").oninput = e=>{ vset.rate = parseFloat(e.target.value); vsave(); };
+  $("vpitch").oninput = e=>{ vset.pitch = parseFloat(e.target.value); vsave(); };
+  $("vtest").onclick = ()=>eveSpeak("Hmm… why?", true);
+}
 </script>
 <script data-goatcounter="https://foxemoji.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
