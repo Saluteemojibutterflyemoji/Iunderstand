@@ -25,7 +25,7 @@ h1{font-size:clamp(2.6rem,12vw,5.5rem);letter-spacing:.06em;margin-top:10px;colo
 .chat{width:100%;max-width:560px;margin-top:40px;padding:20px 16px;border:1px solid rgba(63,212,255,.35);border-radius:18px;background:rgba(5,15,35,.7);box-shadow:0 0 24px rgba(10,140,255,.25);text-align:left;position:relative}
 .chat h2{text-align:center;font-size:1.3rem;color:#eaffff;text-shadow:0 0 10px var(--neon);margin-bottom:10px}
 #logo{display:block;width:70%;max-width:240px;margin:6px auto 14px;border-radius:14px;box-shadow:0 0 18px rgba(63,212,255,.5)}
-#log p{font-size:20px;line-height:1.4;margin:10px 0;color:#dff6ff}
+#log p{font-size:20px;line-height:1.4;margin:10px 0;color:#dff6ff;white-space:pre-line}
 #log .fox{color:#7fe6ff;text-shadow:0 0 6px rgba(63,212,255,.6)}
 #log a{color:#ffb3b0;font-weight:600}
 #row{display:flex;gap:8px;margin-top:12px}
@@ -99,7 +99,7 @@ document.body.appendChild(s);
 </script>
 <script>
 const NAME = "🦊";
-// Teaching mode: users teach Fox what emojis mean with the formula 🦋=love+life=🦋
+// Teaching mode: users teach Fox what emojis mean with the formula emoji=word=emoji
 // Each lesson goes to the shared Firebase "lessons" collection (approved:false until Chris approves).
 const firebaseConfig = {
   apiKey: "AIzaSyBBRbt0JQd-TI6D-1jmTN0FHxkB4ycSCiw",
@@ -112,7 +112,7 @@ const firebaseConfig = {
 const KOFI = "https://ko-fi.com/iunderstand";
 const KOFI_START = "Shadow Fox is free! Chris builds me on a phone and a Chromebook. Help him get a desktop so I can keep growing:";
 const LESSON_CAP = 10;
-const EXAMPLE = "🦋=love+life=🦋";
+const EXAMPLE = "🥶=chill=🥶";
 const CAP_MSG = "🧠🔟 Thank you for teaching Fox! ☕ Donations help Chris keep building her, or tap Start over to teach 10 more.";
 
 let step = 0, me = "", first = "", screen = "", look = "", taught = 0;
@@ -203,7 +203,7 @@ function showCap(delay){
 }
 
 function greet(){
-  return "Hey! Teach me what emojis mean to you. Type it like this: "+EXAMPLE+" Use + for more than one meaning. 🧠 "+taught+"/"+LESSON_CAP;
+  return "Hey! Teach me what emojis mean to you. Type it like this:\nemoji=word=emoji\n✅ "+EXAMPLE+"\n❌ 🥶=chill\nUse + for more than one meaning, like 🥶=chill+cold=🥶\nIf I kick it out, just try again! 🧠 "+taught+"/"+LESSON_CAP;
 }
 
 function answer(t){
@@ -232,8 +232,8 @@ function teach(t){
   say(who(), t);
   if(taught >= LESSON_CAP){ showCap(); return; }
   const m = parseLesson(t);
-  if(m.err==="match"){ foxSay("❌ The emoji has to match on both ends, like "+EXAMPLE); return; }
-  if(m.err){ foxSay("❌ Type it like this: "+EXAMPLE); return; }
+  if(m.err==="match"){ foxSay("❌ The emoji has to match on both ends, like "+EXAMPLE+" Try again!"); return; }
+  if(m.err){ foxSay("❌ Type it like this: emoji=word=emoji, like "+EXAMPLE+" Try again!"); return; }
   cloudSend(m.e, m.list.join(" + "));
   taught++; saveTaught();
   foxSay("✅ "+m.e+" = "+m.list.join(" + ")+"  🧠 "+taught+"/"+LESSON_CAP);
