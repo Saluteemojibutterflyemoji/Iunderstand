@@ -262,10 +262,23 @@ function say(who,text){
   return p;
 }
 
-function foxSay(text){
+// Fox's thinking rhythm: she holds her thoughts 3 seconds, then 6, then 9, and repeats.
+// Chris can change the numbers here anytime (1000 = 1 second).
+const HOLDS = [3000, 6000, 9000];
+let holdStep = 0, busy = false;
+const waiting = [];
+function foxSay(text, hold){
+  const wait = hold===false ? 1400 : HOLDS[holdStep++ % HOLDS.length];
+  busy = true;
   const p = say(NAME,"💭");
-  setTimeout(()=>{ p.textContent = NAME+" ⌨️"; }, 700);
-  setTimeout(()=>{ p.textContent = NAME+" "+text; p.scrollIntoView({behavior:"smooth"}); }, 1400);
+  setTimeout(()=>{ p.textContent = NAME+" ⌨️"; }, wait-700);
+  setTimeout(()=>{
+    p.textContent = NAME+" "+text;
+    p.scrollIntoView({behavior:"smooth"});
+    busy = false;
+    // Back to listening. If someone typed while she was thinking, she answers that next.
+    if(waiting.length) handle(waiting.shift());
+  }, wait);
 }
 
 // Ko-fi note at the top of the chat
@@ -329,23 +342,24 @@ function talk(t){
 
 function send(){
   const q=document.getElementById("q");
-  let t=q.value.trim();
+  const t=q.value.trim();
   if(!t) return;
-  if(step===3){
-    q.value="";
-    talk(t);
-    q.focus();
-    return;
-  }
+  q.value="";
+  q.focus();
+  // If Fox is still holding her thoughts, the message waits its turn
+  if(busy){ waiting.push(t); return; }
+  handle(t);
+}
+
+function handle(t){
+  if(step===3){ talk(t); return; }
   if(step!==1){
     t = onlyEmoji(t);
-    if(!t){ q.value=""; foxSay("Emojis only, "+(first||"friend")+"! 🦊"); return; }
+    if(!t){ foxSay("Emojis only, "+(first||"friend")+"! 🦊"); return; }
   }
   say(who(),t);
   const r = answer(t);
   if(r) foxSay(r);
-  q.value="";
-  q.focus();
 }
 
 function showForget(){ document.getElementById("forget").hidden=false; }
@@ -360,9 +374,9 @@ if(saved && saved.me){
   ({me,first,screen,look} = saved);
   step = 3;
   openChat(); showForget(); talkBox();
-  foxSay(greet());
+  foxSay(greet(), false);
 } else {
-  foxSay("Hi! 😊 I'm Shadow Fox. Are you 🙋‍♂️ or 🙋‍♀️?");
+  foxSay("Hi! 😊 I'm Shadow Fox. Are you 🙋‍♂️ or 🙋‍♀️?", false);
 }
 document.querySelectorAll(".who").forEach(b=>b.onclick=()=>{
   me=b.dataset.g;
@@ -370,7 +384,7 @@ document.querySelectorAll(".who").forEach(b=>b.onclick=()=>{
   openChat();
   step=3; save();
   showForget(); talkBox();
-  foxSay(greet());
+  foxSay(greet(), false);
   document.getElementById("q").focus();
 });
 document.getElementById("ask").onclick=send;
