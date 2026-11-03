@@ -104,7 +104,7 @@ document.body.appendChild(s);
 const NAME = "🦊";
 // Free mode: no lesson limit. People can talk to Fox naturally, and she answers in emojis.
 // Teaching still works anytime with the formula emoji=word=emoji (Chris uses this to teach her).
-// Everything goes to the shared Firebase "lessons" collection with approved:false until Chris approves it.
+// Plus signs are only for teaching. When Fox talks, she lists meanings with commas.
 // Fox's personality: curious and positive. She reacts happily and asks "why?" in emojis.
 const firebaseConfig = {
   apiKey: "AIzaSyBBRbt0JQd-TI6D-1jmTN0FHxkB4ycSCiw",
@@ -156,6 +156,53 @@ function learn(e, list){
   list.forEach(w=>{ if(w && !brain[k].some(x=>x.toLowerCase()===w.toLowerCase())) brain[k].push(w); });
 }
 function knows(e){ return brain[bkey(e)]; }
+// ---- Context: Fox figures out if a meaning is a person, feeling, action, or thing ----
+// Her word base is the Bible. Chris can add more words to these lists anytime.
+const BIBLE_NAMES = ["god","jesus","christ","lord","moses","abraham","isaac","jacob","joseph","david","solomon","noah","adam","eve","mary","peter","paul","john","james","matthew","mark","luke","elijah","elisha","isaiah","jeremiah","daniel","esther","ruth","sarah","rebekah","rachel","leah","samuel","saul","aaron","joshua","gideon","samson","job","jonah","judah","benjamin","lazarus","martha","timothy","thomas","andrew","philip","stephen","nevaeh","chris","ziggy"];
+const FEELINGS = ["love","joy","peace","hope","faith","grace","mercy","fear","anger","wrath","sorrow","grief","shame","pride","glad","happy","sad","chill","calm","kind","kindness","gentle","patience","patient","humble","meek","lonely","afraid","scared","thankful","grateful","blessed","peaceful","joyful","angry","worried","excited","proud","silly","playful","tired","brave","courage"];
+const ACTIONS = ["walk","pray","praise","sing","give","forgive","bless","create","speak","pray","worship","serve","teach","learn","heal","follow","believe","rejoice","weep","cry","run","rest","work","type","share","help","seek","build","play","fight","sleep","eat","read","write","sharing","giving"];
+const CUES = {
+  person: ["who","whom","he","she","him","her","his","friend","brother","sister","father","mother","son","daughter","wife","husband","name","named","mr","mrs","man","woman","child","people","guy","girl","boy"],
+  feeling: ["feel","feels","feeling","felt","i'm","im","so","very","heart","mood","emotion"],
+  action: ["do","does","doing","did","going","go","will","can","let's","lets","make","gonna","want","try"],
+  thing: ["what","this","that","it","look","looks","see","thing","picture"]
+};
+let recent = [];
+function words(s){ return (s||"").toLowerCase().replace(/[^\p{L}\p{N}'\s]/gu," ").split(/\s+/).filter(Boolean); }
+function typeOf(m){
+  const w = m.trim(), lw = words(w);
+  if(/^(mr|mrs|ms|miss|lord|king|queen|saint|uncle|aunt)\b/i.test(w)) return "person";
+  if(lw.some(x=>BIBLE_NAMES.includes(x))) return "person";
+  if(lw.some(x=>FEELINGS.includes(x))) return "feeling";
+  if(lw.some(x=>ACTIONS.includes(x) || (x.length>4 && x.endsWith("ing")))) return "action";
+  if(/^[A-Z]/.test(w) && lw.length<=2) return "person";
+  return "thing";
+}
+function cueType(text){
+  const lw = words(text); let best = null, top = 0;
+  for(const t in CUES){
+    let n = lw.filter(x=>CUES[t].includes(x)).length;
+    if(t==="action") n += lw.filter(x=>x.length>4 && x.endsWith("ing")).length;
+    if(n>top){ top=n; best=t; }
+  }
+  return best;
+}
+// Picks the meaning that fits the conversation best
+function bestMeanings(e, text, others){
+  const list = knows(e) || [];
+  const want = cueType(text);
+  const ctx = new Set(words(recent.join(" ")+" "+text));
+  others.forEach(o=>{ (knows(o)||[]).forEach(m=>words(m).forEach(w=>ctx.add(w))); });
+  const scored = list.map((m,i)=>{
+    let s = 0;
+    if(want && typeOf(m)===want) s += 3;
+    words(m).forEach(w=>{ if(w.length>2 && ctx.has(w)) s += 2; });
+    return {m, s: s - i*0.01};
+  }).sort((a,b)=>b.s-a.s);
+  if(scored.length && scored[0].s > 0) return [scored[0].m];
+  return list.slice(0,2);
+}
+
 // A lesson starts with an emoji and has an = sign
 function looksLikeLesson(t){ return t.includes("=") && /^\s*\p{Extended_Pictographic}/u.test(t); }
 
@@ -264,7 +311,7 @@ function talk(t){
     taught++; saveTaught();
     lastEmoji = m.e;
     const also = before.filter(w=>!m.list.some(x=>x.toLowerCase()===w.toLowerCase())).slice(0,3);
-    foxSay("✅ "+m.e+" = "+m.list.join(" + ")+"  🧠 "+taught+(also.length ? "\n👂 "+m.e+" = "+also.join(" + ") : "")+"\n"+curious(m.e));
+    foxSay("✅ "+m.e+" = "+m.list.join(", ")+"  🧠 "+taught+(also.length ? "\n👂 "+m.e+" = "+also.join(", ") : "")+"\n"+curious(m.e));
     return;
   }
 
@@ -272,7 +319,8 @@ function talk(t){
   if(lastEmoji){ cloudSend(lastEmoji, "why: "+t); lastEmoji = ""; }
   else { cloudSend("💬", "talk: "+t); }
   const list = emojisIn(t);
-  const facts = list.filter(knows).map(e=>"🧠 "+e+" = "+knows(e).slice(0,3).join(" + "));
+  const facts = list.filter(knows).map(e=>"🧠 "+e+" = "+bestMeanings(e, t, list.filter(o=>o!==e)).join(", "));
+  recent.push(t); if(recent.length>4) recent.shift();
   const unknown = list.filter(e=>!knows(e)).join("");
   const ask = unknown || list.join("");
   if(ask) lastEmoji = ask;
