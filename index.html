@@ -3,51 +3,65 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Eve's Diary | AI Unlocked by Chris Allen</title>
-<meta name="description" content="AI Unlocked by Chris Allen of West Jordan, Utah. Eve's Diary: tell Eve about your day and watch it written in emojis. Home of Shadow Fox.">
+<title>Eve the Fox | AI Unlocked by Chris Allen</title>
+<meta name="description" content="AI Unlocked by Chris Allen of West Jordan, Utah. Meet Eve, a little emoji fox pet. Talk to her in emojis and she answers back. Home of Shadow Fox.">
 <meta name="google-site-verification" content="p1PU2tsATB9FBbG-owzw_2Ilbu2nFzQA32wFVfIo0DM" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
 <style>
-:root{--neon:#3fd4ff;--glow:#0a8cff;--paper:#fbf6ea;--line:#cfe3f0;--ink:#1d2a44}
+:root{--neon:#3fd4ff;--glow:#0a8cff;--pink:#ffd6f0}
 *{box-sizing:border-box;margin:0}
 body{min-height:100vh;background:radial-gradient(ellipse at top,#0b1a3a,#02040c 70%);color:#dff6ff;font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;text-align:center;padding:28px 16px;overflow-x:hidden}
 .grid{position:fixed;inset:0;background-image:linear-gradient(rgba(63,212,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(63,212,255,.08) 1px,transparent 1px);background-size:40px 40px;-webkit-mask-image:linear-gradient(to top,#000,transparent 70%);mask-image:linear-gradient(to top,#000,transparent 70%);pointer-events:none}
 .star{position:fixed;width:2px;height:2px;background:#9fe8ff;border-radius:50%;animation:twinkle 3s infinite ease-in-out;pointer-events:none}
 @keyframes twinkle{50%{opacity:.15}}
-.butterfly{width:90px;animation:float 6s ease-in-out infinite;filter:drop-shadow(0 0 8px #3fd4ff) drop-shadow(0 0 20px #0a8cff)}
+.butterfly{width:80px;animation:float 6s ease-in-out infinite;filter:drop-shadow(0 0 8px #3fd4ff) drop-shadow(0 0 20px #0a8cff)}
 .wings{transform-origin:60px 55px;transform-box:view-box;animation:flap .7s ease-in-out infinite alternate}
 @keyframes flap{to{transform:scaleX(.35)}}
 @keyframes float{50%{transform:translateY(-10px)}}
 
-.book{width:100%;max-width:640px;margin-top:14px;position:relative}
-h1{font-family:'Dancing Script',cursive;font-weight:600;font-size:clamp(3rem,13vw,4.8rem);color:#eaffff;text-shadow:0 0 8px var(--neon),0 0 26px var(--glow);line-height:1.1}
-.stay{margin-top:4px;font-size:1.15rem;color:#bfeaff;font-style:italic}
+main{width:100%;max-width:560px;position:relative}
+h1{font-family:'Dancing Script',cursive;font-weight:600;font-size:clamp(3rem,13vw,4.6rem);color:#eaffff;text-shadow:0 0 8px var(--neon),0 0 26px var(--glow);line-height:1.1}
+.sub{margin-top:4px;font-size:1.1rem;color:#bfeaff;font-style:italic}
 
-/* The diary page */
-#page{margin-top:18px;min-height:52vh;padding:28px 22px 28px 46px;text-align:left;background-color:var(--paper);background-image:linear-gradient(90deg,transparent 32px,#f2b8b8 32px,#f2b8b8 34px,transparent 34px),repeating-linear-gradient(to bottom,transparent 0,transparent 55px,var(--line) 55px,var(--line) 56px);background-position:0 0,0 20px;border-radius:6px 16px 16px 6px;box-shadow:0 0 0 1px rgba(63,212,255,.3),0 0 30px rgba(10,140,255,.3),inset 8px 0 14px rgba(0,0,0,.08);color:var(--ink);font-size:36px;line-height:56px;word-wrap:break-word}
-#page .e{display:inline-block;animation:ink .5s ease-out}
-@keyframes ink{from{opacity:0;transform:translateY(-6px) scale(.6)}to{opacity:1;transform:none}}
-#pen{display:inline-block;font-size:34px;transform-origin:bottom left;animation:wait 1.6s ease-in-out infinite}
-#pen.writing{animation:scribble .25s ease-in-out infinite alternate}
-#pen.asleep{opacity:.35;animation:none}
-@keyframes wait{50%{transform:translateY(-6px) rotate(-6deg)}}
-@keyframes scribble{to{transform:translateX(4px) rotate(8deg)}}
-#think{font-size:26px;opacity:0;transition:opacity .4s}
-#think.on{opacity:1;animation:wait 1.2s ease-in-out infinite}
+/* Eve's little home */
+#den{position:relative;margin-top:18px;padding:26px 10px 18px;border-radius:24px;background:radial-gradient(circle at 50% 70%,rgba(255,140,60,.18),rgba(10,30,60,.5) 70%);box-shadow:0 0 0 1px rgba(63,212,255,.3),0 0 30px rgba(10,140,255,.3)}
+#fox{display:inline-block;font-size:130px;line-height:1;cursor:pointer;user-select:none;filter:drop-shadow(0 0 14px rgba(255,150,60,.5));animation:breathe 3s ease-in-out infinite}
+@keyframes breathe{50%{transform:scale(1.04)}}
+#fox.bounce{animation:bounce .5s ease-in-out 3}
+@keyframes bounce{50%{transform:translateY(-28px)}}
+#fox.spin{animation:spin .8s ease-in-out 2}
+@keyframes spin{to{transform:rotate(360deg)}}
+#fox.tilt{animation:tilt 1.2s ease-in-out 2}
+@keyframes tilt{30%{transform:rotate(-14deg)}70%{transform:rotate(10deg)}}
+#fox.wiggle{animation:wiggle .3s ease-in-out 6}
+@keyframes wiggle{50%{transform:rotate(8deg)}}
+#fox.sleep{opacity:.6;animation:none;transform:rotate(-8deg)}
+#zzz{position:absolute;top:18px;right:22%;font-size:34px;opacity:0;transition:opacity .6s}
+#zzz.on{opacity:1;animation:float 2s ease-in-out infinite}
+#bubble{min-height:64px;margin-top:10px;font-size:48px;line-height:64px}
+#bubble span{display:inline-block;animation:pop .4s ease-out}
+@keyframes pop{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}
+#said{min-height:1.6em;font-family:'Dancing Script',cursive;font-size:1.9rem;color:var(--pink);text-shadow:0 0 10px rgba(255,120,200,.6)}
+#hearts{margin-top:8px;font-size:26px;letter-spacing:4px}
+#mood{margin-top:4px;font-size:1.05rem;color:#bfeaff}
 
-#status{margin-top:14px;min-height:1.6em;font-size:1.15rem;color:#bfeaff}
-#eve{min-height:1.8em;margin-top:6px;font-family:'Dancing Script',cursive;font-size:1.9rem;color:#ffd6f0;text-shadow:0 0 10px rgba(255,120,200,.6);transition:opacity .8s}
-#eve.fade{opacity:0}
-
-#mic{display:block;margin:16px auto 0;font-size:22px;padding:16px 30px;border:2px solid var(--neon);border-radius:999px;background:rgba(63,212,255,.12);color:#fff;box-shadow:0 0 16px rgba(10,140,255,.5)}
-#mic.on{background:#ff5e5b;border-color:#ff5e5b;box-shadow:0 0 18px rgba(255,94,91,.6)}
+/* Quick emoji buttons */
+#quick{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:18px}
+#quick button{font-size:30px;width:58px;height:58px;border:2px solid var(--neon);border-radius:16px;background:rgba(63,212,255,.08);cursor:pointer}
+#quick button:active{transform:scale(.9)}
 #typeRow{display:flex;gap:8px;margin-top:14px}
-#q{flex:1;min-width:0;font-size:20px;padding:12px;border:2px solid var(--neon);border-radius:10px;background:#02040c;color:#eaffff}
-#write{font-size:20px;padding:12px 18px;border:0;border-radius:10px;background:var(--glow);color:#fff}
+#q{flex:1;min-width:0;font-size:24px;padding:12px;border:2px solid var(--neon);border-radius:12px;background:#02040c;color:#eaffff}
+#send{font-size:20px;padding:12px 18px;border:0;border-radius:12px;background:var(--glow);color:#fff}
 
-#voice{margin:22px auto 0;max-width:640px;width:100%;border:1px solid rgba(63,212,255,.35);border-radius:12px;padding:10px 14px;text-align:left}
+/* Little chat history */
+#log{margin-top:16px;text-align:left;display:flex;flex-direction:column;gap:6px}
+.msg{max-width:85%;padding:8px 14px;border-radius:16px;font-size:24px;animation:pop .3s ease-out}
+.you{align-self:flex-end;background:rgba(10,140,255,.35)}
+.her{align-self:flex-start;background:rgba(255,140,60,.25)}
+
+#voice{margin:22px auto 0;max-width:560px;width:100%;border:1px solid rgba(63,212,255,.35);border-radius:12px;padding:10px 14px;text-align:left}
 #voice summary{font-size:18px;cursor:pointer;color:#eaffff}
 #voice label{display:block;margin-top:12px;font-size:17px;color:#bfeaff}
 #voice select,#voice input[type=range]{display:block;width:100%;margin-top:6px;font-size:17px}
@@ -57,7 +71,7 @@ h1{font-family:'Dancing Script',cursive;font-weight:600;font-size:clamp(3rem,13v
 #kofi{display:block;width:fit-content;margin:28px auto 8px;padding:14px 26px;background:#ff5e5b;color:#fff;font-size:20px;font-weight:600;text-decoration:none;border-radius:999px}
 
 .small{max-width:600px;margin-top:34px;font-size:.8rem;line-height:1.5;color:#7fa9bf}
-.small .fox{width:54px;display:block;margin:0 auto 6px;filter:drop-shadow(0 0 6px #3fd4ff)}
+.small .foxsvg{width:54px;display:block;margin:0 auto 6px;filter:drop-shadow(0 0 6px #3fd4ff)}
 .small p{margin-top:6px}
 [hidden]{display:none!important}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
@@ -77,38 +91,45 @@ h1{font-family:'Dancing Script',cursive;font-weight:600;font-size:clamp(3rem,13v
 <path d="M60 40 Q54 28 48 24 M60 40 Q66 28 72 24" stroke="#7fe6ff" stroke-width="1.5" fill="none"/>
 </svg>
 
-<main class="book">
-  <h1>Eve's Diary</h1>
-  <p class="stay">Your words stay your words.</p>
+<main>
+  <h1>Eve the Fox</h1>
+  <p class="sub">Your little fox friend. Talk to her in emojis.</p>
 
-  <div id="page" aria-label="Your diary page"><span id="story" aria-live="polite"></span><span id="pen" class="asleep" aria-hidden="true">✒️</span><span id="think" aria-hidden="true">💭</span></div>
-
-  <p id="status" aria-live="polite">Tap the button, then say “Dear Diary” to begin.</p>
-  <p id="eve" aria-live="polite"></p>
-
-  <button id="mic">🎤 Open my diary</button>
-  <div id="typeRow" hidden>
-    <input id="q" placeholder="Start with: Dear Diary" aria-label="Write to your diary" autocomplete="off">
-    <button id="write">Write</button>
+  <div id="den">
+    <span id="zzz" aria-hidden="true">💤</span>
+    <div id="fox" role="button" aria-label="Pet Eve the fox">🦊</div>
+    <div id="bubble" aria-live="polite"></div>
+    <p id="said" aria-live="polite"></p>
+    <div id="hearts" aria-hidden="true"></div>
+    <p id="mood" aria-live="polite">Eve is happy to see you.</p>
   </div>
+
+  <div id="quick" aria-label="Quick emojis for Eve"></div>
+
+  <div id="typeRow">
+    <input id="q" placeholder="Type emojis to Eve" aria-label="Send emojis to Eve" autocomplete="off">
+    <button id="send">Send</button>
+  </div>
+
+  <div id="log" aria-live="polite"></div>
 </main>
 
 <details id="voice">
   <summary>🔊 Eve's voice</summary>
-  <button class="vbtn" id="vtoggle">🔇 Voice is off, tap to turn on</button>
+  <button class="vbtn" id="vtoggle">🔊 Voice is on, tap to turn off</button>
   <label for="vpick">Voice</label>
   <select id="vpick"></select>
   <label for="vrate">Speed</label>
-  <input type="range" id="vrate" min="0.5" max="2" step="0.1" value="0.9">
+  <input type="range" id="vrate" min="0.5" max="2" step="0.1" value="1.1">
   <label for="vpitch">Pitch</label>
-  <input type="range" id="vpitch" min="0" max="2" step="0.1" value="1.2">
+  <input type="range" id="vpitch" min="0" max="2" step="0.1" value="1.6">
   <button class="vbtn" id="vtest">▶️ Test</button>
 </details>
 
 <a id="kofi" href="https://ko-fi.com/iunderstand" target="_blank" rel="noopener">☕ Support me on Ko-fi</a>
 
 <footer class="small">
-  <svg class="fox" viewBox="0 0 160 140" role="img" aria-label="Glowing blue fox">
+  <svg class="foxsvg" viewBox="0 0 160 140" role="img" aria-label="Glowing blue fox">
   <g fill="rgba(10,30,60,.9)" stroke="#3fd4ff" stroke-width="3" stroke-linejoin="round">
   <path d="M22 8 L62 42 L30 66 Z"/><path d="M138 8 L98 42 L130 66 Z"/>
   <path d="M28 48 L80 38 L132 48 L118 88 L80 132 L42 88 Z"/></g>
@@ -116,7 +137,7 @@ h1{font-family:'Dancing Script',cursive;font-weight:600;font-size:clamp(3rem,13v
   <ellipse cx="80" cy="126" rx="6" ry="4" fill="#eaffff"/>
   </svg>
   <p>Shadow Fox: brave, loyal, and forever free. Forever in our hearts. 🫡🦋</p>
-  <p>Welcome to AI Unlocked, created by Chris Allen, an Army veteran from West Jordan, Utah. Eve's Diary is a place to tell your day out loud and watch it written in emojis. Nothing is saved; when you close the page, your story is gone. Eve only listens and wonders; she does not give advice. Home of Shadow Fox, the curious emoji AI.</p>
+  <p>Welcome to AI Unlocked, created by Chris Allen, an Army veteran from West Jordan, Utah. Eve the Fox is a little emoji pet: feed her, play with her, and talk to her in emojis, and she answers back. Nothing you send is saved. Home of Shadow Fox, the curious emoji AI.</p>
 </footer>
 
 <script>
@@ -132,247 +153,181 @@ document.body.appendChild(s);
 
 <script>
 // =====================================================================
-// EVE'S DIARY
-// Nothing is ever saved. The story lives only on this page until it closes.
+// EVE THE FOX — a little emoji pet
+// Nothing people send is saved. Only their voice settings stay in their browser.
 // =====================================================================
 
-// ---- Eve's word list: the words she can turn into emojis (mostly actions) ----
-// Chris can add more anytime: "word":"emoji",
-const DICT = {
-  walk:"🚶",run:"🏃",ran:"🏃",jog:"🏃",eat:"🍽️",ate:"🍽️",drink:"🥤",drank:"🥤",sleep:"😴",slept:"😴",nap:"😴",
-  work:"💼",job:"💼",drive:"🚗",drove:"🚗",car:"🚗",bus:"🚌",cry:"😢",laugh:"😂",smile:"😊",hug:"🤗",kiss:"😘",
-  love:"❤️",pray:"🙏",prayer:"🙏",sing:"🎤",sang:"🎤",dance:"💃",play:"🎮",game:"🎮",read:"📖",write:"✍️",wrote:"✍️",
-  cook:"🍳",bake:"🧁",clean:"🧹",shop:"🛒",buy:"🛒",bought:"🛒",call:"📞",phone:"📱",talk:"🗣️",fight:"🥊",fought:"🥊",
-  swim:"🏊",swam:"🏊",fly:"✈️",flew:"✈️",rest:"🛌",wake:"⏰",woke:"⏰",shower:"🚿",bath:"🛁",study:"📚",learn:"📚",
-  teach:"🧑‍🏫",help:"🤝",give:"🎁",gave:"🎁",gift:"🎁",build:"🔨",built:"🔨",fix:"🔧",paint:"🎨",draw:"🎨",drew:"🎨",
-  watch:"📺",tv:"📺",listen:"👂",hear:"👂",heard:"👂",see:"👀",saw:"👀",look:"👀",think:"💭",thought:"💭",dream:"💭",
-  wait:"⏳",hope:"🌈",win:"🏆",won:"🏆",lose:"💔",lost:"💔",miss:"💔",hurt:"🤕",fall:"🤕",fell:"🤕",
-  home:"🏠",house:"🏠",school:"🏫",church:"⛪",store:"🏪",hospital:"🏥",doctor:"🩺",park:"🌳",beach:"🏖️",gym:"🏋️",exercise:"🏋️",
-  dog:"🐕",puppy:"🐕",cat:"🐈",kitten:"🐈",baby:"👶",kid:"🧒",kids:"🧒",child:"🧒",friend:"🧑‍🤝‍🧑",family:"👨‍👩‍👧",
-  mom:"👩",mother:"👩",dad:"👨",father:"👨",wife:"👩",husband:"👨",son:"👦",daughter:"👧",brother:"👦",sister:"👧",
-  coffee:"☕",food:"🍔",breakfast:"🥞",lunch:"🥪",dinner:"🍝",pizza:"🍕",water:"💧",
-  rain:"🌧️",sun:"☀️",sunny:"☀️",snow:"❄️",cold:"🥶",hot:"🥵",
-  tired:"😴",happy:"😊",glad:"😊",sad:"😢",angry:"😠",mad:"😠",scared:"😨",afraid:"😨",worried:"😟",nervous:"😬",
-  excited:"🤩",proud:"😌",calm:"😌",bored:"😐",sick:"🤒",lonely:"😔",peace:"🕊️",fun:"🎉",party:"🎉",birthday:"🎂",
-  money:"💰",music:"🎵",song:"🎵",movie:"🎬",morning:"🌅",night:"🌙",today:"📅",tomorrow:"📅",yesterday:"📅",
-  god:"🙏",bible:"📖",jesus:"✝️",tree:"🌳",flower:"🌸",butterfly:"🦋",fox:"🦊",good:"👍",bad:"👎",great:"🌟"
+// ---- What Eve understands. Chris can add emojis to any list. ----
+// Each group: the emojis she knows, what she shows back, what she says (short!),
+// how she moves, and how much it changes her mood.
+const KINDS = {
+  food:  {e:"🍖🍗🥩🍓🍎🍇🍪🧀🥚🐟🍕🍔🥕🫐🍌🍒", back:["😋🦊💕","🦊🍽️✨","😋😋🦊"], say:["Yum!","Mmm!","Yummy!"], move:"bounce", mood:2},
+  drink: {e:"💧🥤🥛🧃🚰",                    back:["👅💧😌","🦊💧✨"], say:["Slurp!","Ahh!"], move:"wiggle", mood:1},
+  play:  {e:"🎾⚽🧸🎮🪀🏀🪁🎈🦴",           back:["🎾🦊💨","🦊🏃💨🎾","🤸🦊✨"], say:["Yip yip!","Play!","Again!"], move:"spin", mood:2},
+  love:  {e:"❤️💕💖💗🥰😍😘🤗🫶💞",         back:["🥰🦊💞","🦊🫶💕","💖🦊💖"], say:["Aww!","Love you!","Hee hee!"], move:"wiggle", mood:2},
+  hi:    {e:"👋🙋🤚",                      back:["👋🦊✨","🦊👋😊"], say:["Hi!","Hello!","Yip!"], move:"bounce", mood:1},
+  pet:   {e:"✋🖐️👐🫳",                    back:["😊🦊🫶","🦊😌💕"], say:["Mmm…","Hee hee!"], move:"wiggle", mood:2},
+  sleep: {e:"💤😴🌙🛌🌛⭐",                 back:["😴💤🌙","🦊💤✨"], say:["Zzz…","Night night…"], move:"sleep", mood:1},
+  bug:   {e:"🦋🐝🐞🦗🐛",                   back:["🦊👀🦋✨","🦊🏃🦋"], say:["Ooh!","Look!"], move:"tilt", mood:1},
+  happy: {e:"😊😀😃😄😁😆😂🤣🎉🥳✨🌟☀️🌈", back:["🦊🎉😆","😄🦊✨"], say:["Yay!","Woo!"], move:"bounce", mood:1},
+  sad:   {e:"😢😭💔😔😞🥺",                 back:["🦊🫂💕","🥺🦊💞"], say:["Aww…","Hugs…"], move:"tilt", mood:0},
+  mad:   {e:"😠😡🤬👊",                     back:["🦊😟💭","🙈🦊"], say:["Eep…","Oh…"], move:"tilt", mood:-1},
+  scary: {e:"👻🐺🕷️🐍⚡🌩️",                back:["🦊😨🫣","🙈🦊💨"], say:["Eep!","Yikes!"], move:"wiggle", mood:-1},
+  salute:{e:"🫡",                          back:["🦊🫡🦋"], say:["Yip!"], move:"bounce", mood:1},
+  fox:   {e:"🦊",                          back:["🦊💞🦊","🦊👀🦊✨"], say:["Fox friend!","Yip yip!"], move:"spin", mood:2},
+  ask:   {e:"❓❔🤔",                        back:["🦊❓🤔","🦊💭✨"], say:["Hmm?","Huh?"], move:"tilt", mood:0}
 };
-// What kind of word it is, so Eve knows which question to wonder
-const WHO = ["friend","family","mom","mother","dad","father","wife","husband","son","daughter","brother","sister","baby","kid","kids","child","doctor","god","jesus"];
-const WHERE = ["home","house","school","church","store","hospital","park","beach","gym","car","bus"];
-const WHEN = ["morning","night","today","tomorrow","yesterday","breakfast","lunch","dinner","birthday"];
-const FEEL = ["love","cry","laugh","smile","tired","happy","glad","sad","angry","mad","scared","afraid","worried","nervous","excited","proud","calm","bored","sick","lonely","hurt","miss","lose","lost","hope"];
-
-// Eve only wonders. Short beats, never longer than 3 seconds.
-const ASK = {
-  who:["Who…?","Hmm… who?"],
-  what:["What… then?","Hmm… what?"],
-  when:["When…?","Hmm… when?"],
-  where:["Where…?","Hmm… where?"],
-  why:["Why…?","Hmm… why?","Why… why?"]
+// A few typed words she knows too (so words don't totally lose her)
+const WORDS = {
+  hi:"hi",hello:"hi",hey:"hi",food:"food",eat:"food",hungry:"food",treat:"food",snack:"food",
+  water:"drink",drink:"drink",thirsty:"drink",play:"play",ball:"play",fetch:"play",
+  love:"love",hug:"love",kiss:"love",pet:"pet",pat:"pet",sleep:"sleep",night:"sleep",bed:"sleep",nap:"sleep",
+  happy:"happy",yay:"happy",good:"happy",sad:"sad",cry:"sad",mad:"mad",angry:"mad",scared:"scary",fox:"fox",eve:"fox"
 };
-
-// Eve's thinking rhythm: 3, then 6, then 9 seconds, and repeat (1000 = 1 second)
-const HOLDS = [3000, 6000, 9000];
-const BUMP = 1500;      // a pause this long counts as a period
-const VOICE_MAX = 3000; // Eve never speaks longer than 3 seconds
+const PUZZLED = {back:["🦊❓","🦊🤔💭","🦊👀❔"], say:["Hmm?","Huh?"], move:"tilt", mood:0};
 
 // ---- Pieces of the page ----
 const $ = id => document.getElementById(id);
-const story = $("story"), pen = $("pen"), think = $("think"), statusEl = $("status"), eveEl = $("eve");
-let open = false;       // has the person said "Dear Diary"?
-let lastKinds = [];     // what kind of words were in the last bump
-let holdStep = 0, thinkTimer = null, bumpTimer = null, eveTimer = null;
-let quietUntil = 0;     // ignore the mic while Eve is talking
+const fox=$("fox"), zzz=$("zzz"), bubble=$("bubble"), said=$("said"), hearts=$("hearts"), moodEl=$("mood"), log=$("log");
+let mood = 3;            // 0 to 5 hearts
+let asleep = false, lastTouch = Date.now(), sayTimer = null;
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const clean = s => s.replace(/\uFE0F/g,"");
 
-function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
-function setStatus(t){ statusEl.textContent = t; }
-
-// Finds a word in Eve's list, trying simple endings (running → run, cried → cry)
-function lookup(w){
-  const tries = [w, w.replace(/(.)\1ing$/,"$1"), w.replace(/ing$/,""), w.replace(/ing$/,"e"),
-    w.replace(/ied$/,"y"), w.replace(/(.)\1ed$/,"$1"), w.replace(/ed$/,""), w.replace(/ed$/,"e"),
-    w.replace(/ies$/,"y"), w.replace(/es$/,""), w.replace(/s$/,"")];
-  for(const t of tries){ if(DICT[t]) return t; }
+// Split text into single emojis/characters (keeps emojis with skin tones whole)
+function pieces(t){
+  if(window.Intl && Intl.Segmenter) return [...new Intl.Segmenter().segment(t)].map(x=>x.segment);
+  return Array.from(t);
+}
+function kindOf(piece){
+  const p = clean(piece);
+  for(const k in KINDS){ if(pieces(clean(KINDS[k].e)).includes(p)) return k; }
   return null;
 }
 
-// The pen writes one emoji at a time
-const queue = [];
-let writing = false;
-function writeNext(){
-  if(!queue.length){ writing = false; pen.classList.remove("writing"); return; }
-  writing = true; pen.classList.add("writing");
-  const s = document.createElement("span");
-  s.className = "e"; s.textContent = queue.shift() + " ";
-  story.appendChild(s);
-  pen.scrollIntoView({behavior:"smooth", block:"center"});
-  setTimeout(writeNext, 450);
+// ---- Hearts and mood ----
+function showMood(){
+  hearts.textContent = "❤️".repeat(mood) + "🤍".repeat(5-mood);
+  moodEl.textContent = asleep ? "Eve is sleeping. Send her something to wake her." :
+    mood>=5 ? "Eve is SO happy!" : mood>=3 ? "Eve is happy." : mood>=1 ? "Eve wants some attention." : "Eve is lonely. Give her some love.";
 }
 
-// Each bump (a little pause in their talking) becomes emojis on the page
-function bump(text){
-  let t = text.toLowerCase();
-  if(!open){
-    const i = t.search(/dear\s+dia?ry/);
-    if(i < 0){ setStatus("Say “Dear Diary” to begin."); return; }
-    open = true;
-    pen.classList.remove("asleep");
-    setStatus("Eve is listening… ✒️");
-    t = t.slice(i).replace(/dear\s+dia?ry/,"");
+// ---- Eve moves ----
+function move(kind){
+  fox.className = "";
+  void fox.offsetWidth;          // restart the animation
+  if(kind==="sleep"){ goSleep(); return; }
+  wake();
+  fox.classList.add(kind);
+  setTimeout(()=>{ if(!asleep) fox.className=""; }, 2400);
+}
+function goSleep(){ asleep=true; fox.className="sleep"; zzz.classList.add("on"); showMood(); }
+function wake(){ if(asleep){ asleep=false; zzz.classList.remove("on"); fox.className=""; } }
+
+// ---- Eve answers ----
+function answer(r){
+  const back = pick(r.back), word = pick(r.say);
+  bubble.innerHTML = "";
+  pieces(back).forEach((p,i)=>{
+    const s=document.createElement("span"); s.textContent=p; s.style.animationDelay=(i*0.15)+"s";
+    bubble.appendChild(s);
+  });
+  said.textContent = word;
+  clearTimeout(sayTimer);
+  sayTimer = setTimeout(()=>said.textContent="", 3500);
+  mood = Math.max(0, Math.min(5, mood + r.mood));
+  move(r.move);
+  showMood();
+  addLog(back,"her");
+  eveSpeak(word);
+}
+
+function addLog(text, who){
+  const m=document.createElement("div");
+  m.className="msg "+who; m.textContent=text;
+  log.prepend(m);
+  while(log.children.length>8) log.lastChild.remove();
+}
+
+// Someone sends Eve something
+function send(text){
+  text = text.trim();
+  if(!text) return;
+  lastTouch = Date.now();
+  addLog(text,"you");
+  // First emoji she knows wins; if none, try a word she knows
+  let k = null;
+  for(const p of pieces(text)){ k = kindOf(p); if(k) break; }
+  if(!k){
+    for(const w of text.toLowerCase().split(/[^a-z]+/)){ if(WORDS[w]){ k = WORDS[w]; break; } }
   }
-  const words = t.replace(/[^a-z'\s]/g," ").split(/\s+/).filter(Boolean);
-  const found = [];
-  words.forEach(w=>{ const k = lookup(w.replace(/'s$/,"")); if(k) found.push(k); });
-  if(found.length){
-    lastKinds = found;
-    found.forEach(k=>queue.push(DICT[k]));
-    if(!writing) writeNext();
-  }
+  setTimeout(()=>answer(k ? KINDS[k] : PUZZLED), 600);   // a tiny pause, like she's thinking
 }
 
-// After a longer pause (the period), Eve thinks 3, 6 or 9 seconds, then wonders
-function wonder(){
-  if(!open) return;
-  clearTimeout(thinkTimer);
-  think.classList.add("on");
-  thinkTimer = setTimeout(()=>{
-    think.classList.remove("on");
-    let kind = "why";
-    if(lastKinds.some(k=>WHO.includes(k))) kind = pick(["who","why"]);
-    else if(lastKinds.some(k=>WHERE.includes(k))) kind = pick(["where","why"]);
-    else if(lastKinds.some(k=>WHEN.includes(k))) kind = pick(["when","what"]);
-    else if(lastKinds.some(k=>FEEL.includes(k))) kind = "why";
-    else if(lastKinds.length) kind = pick(["what","why"]);
-    const line = pick(ASK[kind]);
-    eveEl.classList.remove("fade");
-    eveEl.textContent = line;
-    clearTimeout(eveTimer);
-    eveTimer = setTimeout(()=>eveEl.classList.add("fade"), 4000);
-    eveSpeak(line);
-    lastKinds = [];
-  }, HOLDS[holdStep++ % HOLDS.length]);
-}
+// Quick emoji buttons
+["🍖","💧","🎾","❤️","✋","👋","🦋","💤"].forEach(e=>{
+  const b=document.createElement("button"); b.textContent=e; b.setAttribute("aria-label","Send "+e);
+  b.onclick=()=>send(e);
+  $("quick").appendChild(b);
+});
+$("send").onclick=()=>{ send($("q").value); $("q").value=""; };
+$("q").addEventListener("keydown",e=>{ if(e.key==="Enter"){ send($("q").value); $("q").value=""; } });
+// Tapping Eve pets her
+fox.onclick=()=>send("✋");
 
-// If they keep talking, Eve goes back to zero and just listens
-function backToZero(){
-  clearTimeout(thinkTimer);
-  think.classList.remove("on");
-}
+// If nobody plays for a while she gets lonely, then sleepy
+setInterval(()=>{
+  const quiet = Date.now()-lastTouch;
+  if(quiet > 120000 && mood>0){ mood--; showMood(); lastTouch = Date.now()-60000; }
+  if(quiet > 90000 && !asleep && mood<=2) goSleep();
+}, 15000);
 
-// ---- Listening with the microphone ----
-const Ear = window.SpeechRecognition || window.webkitSpeechRecognition;
-let ear = null, listening = false;
-if(!Ear){
-  // No microphone support in this browser: let them type instead
-  $("mic").hidden = true;
-  $("typeRow").hidden = false;
-  setStatus("Type “Dear Diary” to begin. End with . or ? when you want Eve to wonder.");
-}else{
-  ear = new Ear();
-  ear.lang = "en-US";
-  ear.continuous = true;
-  ear.interimResults = true;
-  ear.onresult = e=>{
-    if(Date.now() < quietUntil) return;
-    for(let i=e.resultIndex; i<e.results.length; i++){
-      const r = e.results[i];
-      backToZero();
-      clearTimeout(bumpTimer);
-      if(r.isFinal){
-        bump(r[0].transcript);
-        bumpTimer = setTimeout(wonder, BUMP);
-      }
-    }
-  };
-  ear.onend = ()=>{ if(listening){ try{ ear.start(); }catch(e){} } };
-  ear.onerror = e=>{
-    if(e.error==="not-allowed" || e.error==="service-not-allowed"){
-      listening = false; micLook();
-      setStatus("Eve needs permission to use the microphone.");
-    }
-  };
-  $("mic").onclick = ()=>{
-    listening = !listening;
-    micLook();
-    if(listening){
-      try{ ear.start(); }catch(e){}
-      setStatus(open ? "Eve is listening… ✒️" : "Say “Dear Diary” to begin.");
-    }else{
-      try{ ear.stop(); }catch(e){}
-      backToZero();
-      setStatus("Diary resting. Tap the button to keep talking.");
-    }
-  };
-}
-function micLook(){
-  $("mic").classList.toggle("on", listening);
-  $("mic").textContent = listening ? "🔴 Eve is listening, tap to pause" : "🎤 Open my diary";
-}
-
-// Typing fallback: a . or ? at the end is the period; leave it open and Eve stays at zero
-function typed(){
-  const t = $("q").value.trim();
-  if(!t) return;
-  $("q").value = "";
-  backToZero();
-  bump(t);
-  if(/[.?!]$/.test(t)) wonder();
-}
-$("write").onclick = typed;
-$("q").addEventListener("keydown", e=>{ if(e.key==="Enter") typed(); });
-
-// ---- Eve's voice: each person picks the voice, speed and pitch they like ----
+// ---- Eve's voice: short pet words only, never longer than 3 seconds ----
 const synth = window.speechSynthesis;
-let vset = {on:false, name:"", rate:0.9, pitch:1.2};
-try{ Object.assign(vset, JSON.parse(localStorage.getItem("eve-voice")) || {}); }catch(e){}
-function vsave(){ try{ localStorage.setItem("eve-voice", JSON.stringify(vset)); }catch(e){} }
+let vset = {on:true, name:"", rate:1.1, pitch:1.6};
+try{ Object.assign(vset, JSON.parse(localStorage.getItem("eve-fox-voice")) || {}); }catch(e){}
+function vsave(){ try{ localStorage.setItem("eve-fox-voice", JSON.stringify(vset)); }catch(e){} }
 function eveSpeak(line, force){
   if(!synth || (!vset.on && !force)) return;
   try{
     synth.cancel();
-    const u = new SpeechSynthesisUtterance(line.replace(/…/g,", "));
+    const u = new SpeechSynthesisUtterance(line.replace(/…/g,""));
     const v = synth.getVoices().find(x=>x.name===vset.name);
-    if(v){ u.voice = v; u.lang = v.lang; }
-    u.rate = vset.rate; u.pitch = vset.pitch;
-    quietUntil = Date.now() + VOICE_MAX + 600;
+    if(v){ u.voice=v; u.lang=v.lang; }
+    u.rate=vset.rate; u.pitch=vset.pitch;
     synth.speak(u);
-    setTimeout(()=>synth.cancel(), VOICE_MAX);
+    setTimeout(()=>synth.cancel(), 3000);
   }catch(e){}
 }
 function vtoggleText(){
   $("vtoggle").textContent = vset.on ? "🔊 Voice is on, tap to turn off" : "🔇 Voice is off, tap to turn on";
 }
 function fillVoices(){
-  const list = synth.getVoices();
-  if(!list.length) return;
-  const sel = $("vpick");
-  sel.innerHTML = "";
+  const list=synth.getVoices(); if(!list.length) return;
+  const sel=$("vpick"); sel.innerHTML="";
   list.forEach(v=>{
-    const o = document.createElement("option");
-    o.value = v.name; o.textContent = v.name+" ("+v.lang+")";
-    if(v.name===vset.name) o.selected = true;
+    const o=document.createElement("option");
+    o.value=v.name; o.textContent=v.name+" ("+v.lang+")";
+    if(v.name===vset.name) o.selected=true;
     sel.appendChild(o);
   });
-  if(!vset.name) vset.name = sel.value;
+  if(!vset.name) vset.name=sel.value;
 }
-if(!synth){ $("voice").hidden = true; }
+if(!synth){ $("voice").hidden=true; }
 else{
   fillVoices();
-  synth.onvoiceschanged = fillVoices;
-  $("vrate").value = vset.rate;
-  $("vpitch").value = vset.pitch;
+  synth.onvoiceschanged=fillVoices;
+  $("vrate").value=vset.rate; $("vpitch").value=vset.pitch;
   vtoggleText();
-  $("vtoggle").onclick = ()=>{
-    vset.on = !vset.on; vsave(); vtoggleText();
-    if(vset.on) eveSpeak("Hmm… why?");
-    else synth.cancel();
-  };
-  $("vpick").onchange = e=>{ vset.name = e.target.value; vsave(); };
-  $("vrate").oninput = e=>{ vset.rate = parseFloat(e.target.value); vsave(); };
-  $("vpitch").oninput = e=>{ vset.pitch = parseFloat(e.target.value); vsave(); };
-  $("vtest").onclick = ()=>eveSpeak("Hmm… why?", true);
+  $("vtoggle").onclick=()=>{ vset.on=!vset.on; vsave(); vtoggleText(); if(vset.on) eveSpeak("Yip!"); else synth.cancel(); };
+  $("vpick").onchange=e=>{ vset.name=e.target.value; vsave(); };
+  $("vrate").oninput=e=>{ vset.rate=parseFloat(e.target.value); vsave(); };
+  $("vpitch").oninput=e=>{ vset.pitch=parseFloat(e.target.value); vsave(); };
+  $("vtest").onclick=()=>eveSpeak("Yip yip!", true);
 }
+
+showMood();
+bubble.textContent = "👋✨";
 </script>
 <script data-goatcounter="https://foxemoji.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
